@@ -158,6 +158,14 @@ async def root(request: Request):
     )
 
 
+@app.get("/intro", response_class=HTMLResponse)
+async def intro(request: Request):
+    """遊戲介紹頁面（官方網站）"""
+    return templates.TemplateResponse(
+        request=request, name="intro.html", context={}
+    )
+
+
 @app.get("/offline.html", response_class=HTMLResponse)
 async def offline(request: Request):
     """離線頁面"""
