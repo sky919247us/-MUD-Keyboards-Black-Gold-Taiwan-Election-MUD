@@ -30,60 +30,93 @@ if ("serviceWorker" in navigator) {
 
 // ===== LINE LIFF 登入 =====
 
-/**
- * 使用者點擊「以 LINE 帳號登入」後觸發
- * NOTE: 在正式 LIFF 環境（Line App 內开启）才可正常運作
- */
-async function startLineLogin() {
-  const btn = document.getElementById("btn-line-login");
-  const devBtn = document.getElementById("btn-dev-login");
-  btn.textContent = "連接中...";
-  btn.disabled = true;
+/** LIFF 是否已初始化 */
+let liffInitialized = false;
 
+/**
+ * 頁面載入時自動初始化 LIFF
+ * NOTE: 在 LINE App 內開啟時，LIFF 會自動登入並取得使用者資料
+ */
+async function initLiff() {
   try {
     await liff.init({ liffId: LIFF_ID });
+    liffInitialized = true;
+    console.log("LIFF 初始化成功, isLoggedIn:", liff.isLoggedIn());
+    console.log("LIFF isInClient:", liff.isInClient());
 
-    if (!liff.isLoggedIn()) {
-      // 觸發 LINE OAuth 登入（會跳轉至 LINE 認證頁面）
-      liff.login();
-      return;
+    if (liff.isLoggedIn()) {
+      // 已登入，自動取得 Profile 進入遊戲
+      await handleLiffLogin();
     }
+    // 未登入：等使用者按下「以 LINE 帳號登入」按鈕
+  } catch (err) {
+    console.warn("LIFF 初始化失敗（可能不在 LINE 環境中）:", err.message);
+    // 不彈出任何對話框，讓使用者自行點選按鈕觸發登入
+  }
+}
 
-    // 登入成功，取得使用者 Profile
+/**
+ * LIFF 已登入後，取得 Profile 並進入遊戲
+ */
+async function handleLiffLogin() {
+  const btn = document.getElementById("btn-line-login");
+  if (btn) {
+    btn.textContent = "連接中...";
+    btn.disabled = true;
+  }
+
+  try {
     const profile = await liff.getProfile();
     userId = profile.userId;
     const displayName = profile.displayName;
-    const pictureUrl  = profile.pictureUrl;
+    const pictureUrl  = profile.pictureUrl || "";
 
     // 更新頂部標題顯示使用者名稱
     document.getElementById("header-status").textContent = displayName;
 
     // 呼叫後端綁定 LINE 帳號並查詢角色
     await bindLineAndCheckCharacter(userId, displayName, pictureUrl);
-
   } catch (err) {
-    console.error("LIFF Init error:", err);
-    btn.textContent = "以 LINE 帳號登入";
-    btn.disabled = false;
-    
-    // 如果是初始化失敗（通常是因為不是 HTTPS 或 Endpoint 不對），提示使用者可以使用開發模式
-    if (confirm("LIFF 初始化失敗（可能因非 HTTPS 環境）。是否要切換至「開發者匿名模式」進行測試？")) {
-      enterDevMode();
+    console.error("取得 LINE Profile 失敗:", err);
+    if (btn) {
+      btn.textContent = "以 LINE 帳號登入";
+      btn.disabled = false;
     }
   }
 }
 
 /**
- * 手動進入開發者模式（不需 LINE 認證）
+ * 使用者點擊「以 LINE 帳號登入」按鈕時觸發
  */
-async function enterDevMode() {
-  console.warn("啟用開發模式進入系統...");
-  userId = "dev_user_" + Math.floor(Math.random() * 1000); // 隨機生成一個 ID
-  document.getElementById("header-status").textContent = "匿名訪客 (" + userId + ")";
-  
-  // 直接進入角色檢查流程（此時後端會因為找不到這個 UID 而引導至建角畫面）
-  await bindLineAndCheckCharacter(userId, "匿名玩家", "");
+async function startLineLogin() {
+  const btn = document.getElementById("btn-line-login");
+  btn.textContent = "連接中...";
+  btn.disabled = true;
+
+  try {
+    // 如果 LIFF 尚未初始化，先初始化
+    if (!liffInitialized) {
+      await liff.init({ liffId: LIFF_ID });
+      liffInitialized = true;
+    }
+
+    if (liff.isLoggedIn()) {
+      // 已登入（例如從 LINE OAuth 回來後），直接取得 Profile
+      await handleLiffLogin();
+    } else {
+      // 未登入，觸發 LINE OAuth 跳轉（回來後 LIFF 會自動帶登入狀態）
+      liff.login({ redirectUri: window.location.origin + "/" });
+    }
+  } catch (err) {
+    console.error("LINE 登入失敗:", err);
+    btn.textContent = "以 LINE 帳號登入";
+    btn.disabled = false;
+    alert("LINE 登入失敗，請確認您是在 LINE App 中開啟此頁面，或稍後再試。");
+  }
 }
+
+// 頁面載入時自動初始化 LIFF
+document.addEventListener("DOMContentLoaded", initLiff);
 
 /**
  * 呼叫後端 LINE 帳號綁定 API，取得或建立遊戲角色
