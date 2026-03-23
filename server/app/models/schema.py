@@ -39,5 +39,9 @@ class EntityModel(Base):
     # 整包 PoliticalEntity Pydantic 型別直接轉 dict 存入
     state_data = Column(JSON, nullable=False, server_default='{}')
     
+    # LINE Auth 相關欄位
+    line_user_id = Column(String, index=True, nullable=True, comment="綁定的 LINE 帳號 ID")
+    line_display_name = Column(String, nullable=True, comment="綁定的 LINE 顯示名稱")
+    
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
