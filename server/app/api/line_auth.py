@@ -11,7 +11,6 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app.db.session import AsyncSessionLocal
-from app.db.async_repo import getEntityById
 from sqlalchemy import text
 
 logger = logging.getLogger(__name__)
