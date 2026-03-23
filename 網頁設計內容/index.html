@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>鍵盤與黑金：台灣選戰 MUD | 官方網站</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="scanlines"></div>
+    
+    <header class="hero-section">
+        <div class="glitch-wrapper">
+            <h1 class="glitch" data-text="鍵盤與黑金">鍵盤與黑金</h1>
+            <h2 class="subtitle">TAIWAN ELECTION MUD</h2>
+        </div>
+        <p class="tagline">政治，是一場沒有硝煙的戰爭。<br>鍵盤，就是你最強的武器。</p>
+        <a href="#play-now" class="cyber-btn primary-btn">>>> SYSTEM.LOGIN( )</a>
+    </header>
+
+    <nav class="sticky-nav">
+        <a href="#about">遊戲簡介</a>
+        <a href="#mechanics">核心機制</a>
+        <a href="#crisis">危機連動</a>
+        <a href="#economy">地下經濟</a>
+    </nav>
+
+    <main class="content-wrapper">
+        <section id="about" class="cyber-panel">
+            <h2 class="panel-title">▍ 壹、遊戲背景介紹 ▍</h2>
+            <div class="panel-content">
+                <p>《鍵盤與黑金：台灣選戰 MUD》是一款結合「文字 MUD」、「即時資料陣營對抗」與「現實大數據連動」的硬核政治模擬遊戲。</p>
+                <p>在這個遊戲中，您並非扮演台面上的政治明星，而是隱身於幕後的<span class="highlight">「政治幕僚」</span>。透過操控網軍、發動公關戰、洗白黑金，甚至利用現實天氣與股市行情，幫助所屬陣營的老闆累積資源，奪取全台霸主地位！</p>
+                <ul class="feature-list">
+                    <li><span class="highlight-green">[陣營共享]</span> 結盟同梯幕僚，共同經營 Boss 數值。</li>
+                    <li><span class="highlight-green">[現實連動]</span> 中央氣象署與台股大盤資料即時影響選情。</li>
+                    <li><span class="highlight-green">[動態危機]</span> 隨即觸發跳電、豆腐渣工程與網軍翻車事件。</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="mechanics" class="cyber-panel">
+            <h2 class="panel-title">▍ 貳、核心機制與操作 ▍</h2>
+            <div class="panel-content">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>🏆 知名度</h3>
+                        <p>衡量政治實力的絕對指標，決定排行榜名次。</p>
+                    </div>
+                    <div class="stat-card">
+                        <h3>💖 好感度</h3>
+                        <p>募款效率的關鍵。跌破 0 會引發檢調介入與金主抽腿。</p>
+                    </div>
+                    <div class="stat-card danger">
+                        <h3>👿 仇恨值</h3>
+                        <p>發動側翼攻擊的代價。過高易引發「網軍翻車」公關危機。</p>
+                    </div>
+                </div>
+
+                <h3 class="sub-title">> 終端機指令手冊</h3>
+                <div class="command-box">
+                    <p><code>/act 召開政見會</code> - 穩定增加知名度</p>
+                    <p><code>/act 掃街拜票</code> - 穩健提升好感度，降低負面聲量</p>
+                    <p><code>/act 舉辦募款</code> - 獲得政治獻金（發動攻防必備彈藥）</p>
+                    <p><code>/attack [對手]</code> - <span class="text-danger">耗資發動側翼網軍抹黑，削弱對手</span></p>
+                    <p><code>/flip [對手] [樁腳ID]</code> - <span class="text-danger">砸錢拔樁，瓦解敵方基層實力</span></p>
+                </div>
+            </div>
+        </section>
+
+        <section id="crisis" class="cyber-panel">
+            <h2 class="panel-title">▍ 參、現實連動與危機事件 ▍</h2>
+            <div class="panel-content">
+                <ul class="crisis-list">
+                    <li>
+                        <strong>💸 股災恐慌 (現實股市連動)</strong>
+                        <p>若現實台股大跌，在野黨幕僚會獲得攻擊力加倍的 Buff；執政黨則慘遭好感度扣減。</p>
+                    </li>
+                    <li>
+                        <strong>🌀 颱風假豪賭 (現實天氣連動)</strong>
+                        <p>氣象署發布大雨警報將觸發「颱風假」事件。放對了名利雙收；放錯了仇恨值飆升。</p>
+                    </li>
+                    <li>
+                        <strong>💥 網軍翻車事件</strong>
+                        <p>如果老闆的「仇恨值」過高，有極高機率被爆出操控網軍醜聞，好感度瞬間歸零。</p>
+                    </li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="economy" class="cyber-panel">
+            <h2 class="panel-title">▍ 肆、戰略黑金儀表板 ▍</h2>
+            <div class="panel-content">
+                <p>資金見不得光時，透過地下網路進行資本操作：</p>
+                <div class="command-box">
+                    <p><code>/launder [金額]</code> - 跨國地下匯兌。洗白保留率隨風聲浮動，檢警查緝越嚴，失敗率越高。</p>
+                    <p><code>/invest [代號] [數量]</code> - 投資百大集團概念股（如：紅海帝國）。利用政治資源進行內線交易。</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer id="play-now" class="footer-cta">
+        <h2>> 系統連線準備完畢_</h2>
+        <p>立刻加入 LINE 官方帳號，綁定幕僚身分開始你的黑金帝國。</p>
+        <a href="https://line.me/R/" class="cyber-btn primary-btn pulse" target="_blank" rel="noopener noreferrer">>> 啟動遊戲終端 <<<</a>
+        <div class="copyright">© 2026 Keyboards & Black Gold Taiwan Election MUD. All rights reserved.</div>
+    </footer>
+</body>
+</html>

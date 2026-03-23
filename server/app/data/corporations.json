@@ -1,0 +1,108 @@
+{
+  "corporations": [
+    {
+      "id": "corp_tsmc",
+      "name": "台積電集團 (G2330)",
+      "industry": "科技/半導體",
+      "stance": "建制派",
+      "description": "全球半導體龍頭，國家級矽盾。優先支持穩定電力與產業補貼之政策。",
+      "sub_entities": ["台積電文化基金會"]
+    },
+    {
+      "id": "corp_foxconn",
+      "name": "鴻海集團 (G2317)",
+      "industry": "科技/代工",
+      "stance": "建制派",
+      "description": "全球 EMS 龍頭。在地緣政治中尋求平衡，具備強大基層員工票源潛力。",
+      "sub_entities": ["永齡基金會"]
+    },
+    {
+      "id": "corp_cathay",
+      "name": "霖園集團 (國泰金 G2882)",
+      "industry": "金融/保險",
+      "stance": "建制派/保守",
+      "description": "資產規模最大金融集團。政治獻金遍及立法院財委會成員。",
+      "sub_entities": ["國泰世華銀行"]
+    },
+    {
+      "id": "corp_fubon",
+      "name": "富邦集團 (G2881)",
+      "industry": "金融/媒體/電信",
+      "stance": "建制派",
+      "description": "跨足金融與電訊，與政界關係深厚。",
+      "sub_entities": ["台灣大哥大", "富邦悍將"]
+    },
+    {
+      "id": "corp_feg",
+      "name": "遠東集團 (G1402)",
+      "industry": "傳產/營造/百貨",
+      "stance": "建制派/趨於保守",
+      "description": "長期政治獻金『金主王』。受兩岸情勢壓力，近年捐贈轉趨低調。",
+      "sub_entities": ["亞東化纖", "遠傳電信"]
+    },
+    {
+      "id": "corp_formosa",
+      "name": "台塑集團 (G1301)",
+      "industry": "傳統產業/石化",
+      "stance": "保守",
+      "description": "台灣傳產指標。極度重視環保法規與能源穩定運營。",
+      "sub_entities": ["南亞", "台化"]
+    },
+    {
+      "id": "corp_uni",
+      "name": "統一集團 (G1216)",
+      "industry": "民生消費",
+      "stance": "建制派",
+      "description": "掌握全台超商通路（7-11）。對庶民經濟輿論具影響力。",
+      "sub_entities": ["統一超商", "統一企業"]
+    },
+    {
+      "id": "media_set",
+      "name": "三立媒體集團",
+      "industry": "媒體矩陣",
+      "stance": "偏綠",
+      "description": "台灣影視與新聞指標。對特定政黨提供強大空戰支援與節目資源。",
+      "sub_entities": ["三立新聞", "三立台灣台"]
+    },
+    {
+      "id": "media_ftv",
+      "name": "民視媒體集團",
+      "industry": "媒體矩陣",
+      "stance": "偏綠",
+      "description": "深具本土色彩的媒體。在南台灣基層選民中具有極高渲染力。",
+      "sub_entities": ["民視新聞", "四季線上"]
+    },
+    {
+      "id": "media_ebc",
+      "name": "東森媒體集團",
+      "industry": "媒體矩陣",
+      "stance": "中間/商業導向",
+      "description": "報導風格辛辣快速。目標受眾為中產階級與上班族。",
+      "sub_entities": ["東森新聞", "東森財經"]
+    },
+    {
+      "id": "media_cti",
+      "name": "中天媒體集團",
+      "industry": "媒體矩陣",
+      "stance": "偏藍",
+      "description": "以網路直播為主戰場。對建制派支持者與兩岸經貿議題具極大發言權。",
+      "sub_entities": ["中天新聞網", "旺旺中時集團"]
+    },
+    {
+      "id": "media_tvbs",
+      "name": "聯利媒體 (TVBS)",
+      "industry": "媒體矩陣",
+      "stance": "中間/偏藍",
+      "description": "擁有高公信力的新聞台。其民調中心數據常為選戰攻防焦點。",
+      "sub_entities": ["TVBS新聞", "少康戰情室"]
+    },
+    {
+      "id": "corp_con_build",
+      "name": "全台營造建商公會",
+      "industry": "營造/房地產",
+      "stance": "分散/基層金主",
+      "description": "去中心化的獻金機器。透過無數子公司捐贈，是政治人物的重要金主。",
+      "sub_entities": ["各地區建商代銷"]
+    }
+  ]
+}

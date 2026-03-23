@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>鍵盤與黑金 - 離線模式</title>
+    <style>
+        body { background: #0a0a0a; color: #ff3333; font-family: monospace; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; }
+        .box { border: 2px dashed #ff3333; padding: 30px; text-align: center; }
+        h1 { margin-bottom: 20px; }
+        button { background: #1a1a1a; color: #33ff33; border: 1px solid #33ff33; padding: 10px 20px; font-size: 1.1em; cursor: pointer; margin-top: 20px; }
+        button:hover { background: #2a2a2a; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>⚠ 訊號中斷</h1>
+        <p>你已與競選總部失去連線。</p>
+        <p>請確認網路狀態後重新連線。</p>
+        <button onclick="window.location.reload()">重新連線</button>
+    </div>
+</body>
+</html>

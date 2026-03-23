@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>鍵盤與黑金：台灣選戰 MUD</title>
+    <!-- PWA -->
+    <link rel="manifest" href="/static/manifest.json">
+    <meta name="theme-color" content="#0a0a0a">
+    <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/css/game.css">
+    <!-- LIFF SDK (Phase 2) -->
+    <script src="https://static.line-scdn.net/liff/edge/2/sdk.js"></script>
+    <!-- Chart.js (Phase 7) -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- 頂部標題列 -->
+    <div id="header">⌨ 鍵盤與黑金：台灣選戰 MUD ⌨</div>
+
+    <!-- 畫面 1：登入與授權中 -->
+    <div id="screen-loading" style="display: flex; height: 100%; align-items: center; justify-content: center;">
+        <div>📡 系統連線中，請稍候...</div>
+    </div>
+
+    <!-- 畫面 2：角色建立流程 -->
+    <div id="screen-creation" style="display: none; height: 100%; overflow-y: auto;">
+        <div style="text-align: center; padding: 20px;">
+            <h2 class="system">◆ 創建你的選戰化身 ◆</h2>
+            <p style="margin-top: 10px;">請選擇你的政治光譜與所屬陣營</p>
+        </div>
+        
+        <div id="party-list" style="display: flex; flex-direction: column; align-items: center; padding-bottom: 30px;">
+            <!-- 由 JS 動態生成政黨卡片 -->
+        </div>
+
+        <div style="text-align: center; padding-bottom: 50px;">
+            <button id="btn-create-role" class="action-btn" style="display: none; padding: 15px 40px; font-size: 1.2em; border-color: var(--border-color);">
+                確定陣營，抽取身分
+            </button>
+        </div>
+    </div>
+
+    <!-- 畫面 3：遊戲主介面 -->
+    <div id="screen-game" style="display: none; height: 100%; flex-direction: column;">
+        <!-- 新聞跑馬燈 (Phase 7.2) -->
+        <div id="news-marquee" style="background: linear-gradient(90deg, #ff0000, #990000); color: #fff; padding: 5px 15px; font-weight: bold; overflow: hidden; white-space: nowrap; display: none; align-items: center; gap: 10px;">
+            <span style="background: #fff; color: #ff0000; padding: 2px 5px; font-size: 0.8em; border-radius: 3px;">LIVE</span>
+            <span id="news-text">加載中...</span>
+        </div>
+
+        <!-- 選情趨勢圖 (Phase 7.1) -->
+        <div id="chart-container" style="height: 180px; padding: 10px; background: rgba(0,0,0,0.3); border-bottom: 1px solid var(--border-color);">
+            <canvas id="trendingChart"></canvas>
+        </div>
+
+        <!-- 黑金股市快捷按鈕 (Phase 8.4) -->
+        <button id="btn-economy" onclick="openEconomy()" style="position: absolute; right: 20px; bottom: 170px; width: 60px; height: 60px; border-radius: 50%; background: #f39c12; color: white; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+            💼
+        </button>
+
+        <!-- 戰情室快捷按鈕 (Phase 7.4) -->
+        <button id="btn-warroom" onclick="openWarRoom()" style="position: absolute; right: 20px; bottom: 100px; width: 60px; height: 60px; border-radius: 50%; background: var(--primary-color); color: white; border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: center; justify-content: center; font-size: 24px;">
+            📊
+        </button>
+
+        <!-- 訊息流 -->
+        <div id="output"></div>
+        
+        <!-- 六宮格行動面板 -->
+        <div id="action-panel">
+            <button class="action-btn" onclick="sendAction('/act 召開政見發表會', '政見發表')">📢 政見發表</button>
+            <button class="action-btn" onclick="sendAction('/act 掃街拜票行程', '掃街拜票')">🏘 掃街拜票</button>
+            <button class="action-btn" onclick="sendAction('/attack', '輿論攻防')">⚔ 輿論攻防</button>
+            <button class="action-btn" onclick="sendAction('/act 舉辦募款餐會', '募款活動')">💰 募款活動</button>
+            <button class="action-btn" onclick="sendAction('/look', '選情分析')">📊 選情分析</button>
+            <button class="action-btn" onclick="sendAction('/status', '幕僚狀態')">🔧 幕僚狀態</button>
+        </div>
+
+        <!-- 底部快捷列 -->
+        <div id="tool-bar">
+            <button class="tool-btn" onclick="sendAction('/status')">[📋狀態]</button>
+            <button class="tool-btn" onclick="sendAction('/look')">[🗺世界]</button>
+            <button class="tool-btn" onclick="sendAction('/help')">[❓說明]</button>
+        </div>
+    </div>
+
+    <!-- 主程式邏輯 -->
+    <!-- 戰情室彈窗 (Phase 7.4) -->
+    <div id="warroomModal" class="modal" style="display:none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px);">
+        <div style="background: var(--bg-color); border: 1px solid var(--border-color); margin: 5% auto; padding: 20px; width: 90%; max-width: 600px; height: 80vh; display: flex; flex-direction: column; overflow: hidden; border-radius: 10px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">
+                <h2 style="margin:0; color: var(--primary-color);">全台即時戰情室</h2>
+                <button onclick="closeWarRoom()" style="background:none; border:none; color:white; font-size: 24px;">&times;</button>
+            </div>
+            
+            <div style="display: flex; gap: 10px; margin: 15px 0;">
+                <button onclick="switchWarRoomTab('rank')" class="tab-btn active">全國聲量榜</button>
+                <button onclick="switchWarRoomTab('map')" class="tab-btn">22 縣市板圖</button>
+            </div>
+
+            <div id="warroom-content" style="flex: 1; overflow-y: auto; padding-top: 10px;">
+                <!-- 動態注入內容 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 經濟/黑市 模態框 (Phase 8.4) -->
+    <div id="economyModal" class="modal" style="display:none; position:fixed; top:10%; left:5%; width:90%; height:80%; background:var(--bg-color); z-index:1000; border-radius:12px; box-shadow:0 8px 32px rgba(0,0,0,0.8); border:1px solid #444; overflow:hidden; flex-direction:column;">
+        <div style="padding:15px; border-bottom:1px solid #333; display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:bold; font-size:1.2em; color:#f1c40f;">💼 戰略黑金儀表板</div>
+            <button onclick="closeEconomy()" style="background:none; border:none; color:white; font-size:1.5em; cursor:pointer;">&times;</button>
+        </div>
+        <div id="economy-content" style="flex:1; overflow-y:auto; padding:15px; display:flex; flex-direction:column; gap:15px;">
+            <p style="color:#aaa;">連線地下網路中...</p>
+        </div>
+    </div>
+
+    <style>
+        .tab-btn { background: #333; color: #888; border: 1px solid #444; padding: 8px 15px; border-radius: 5px; cursor: pointer; }
+        .tab-btn.active { background: var(--primary-color); color: white; border-color: var(--primary-color); }
+        .data-row { display: flex; border-bottom: 1px solid #222; padding: 8px 0; align-items: center; }
+        .party-tag { padding: 2px 6px; border-radius: 3px; font-size: 0.8em; margin-right: 8px; font-weight: bold; }
+        .tag-KMT { background: #000095; color: white; }
+        .tag-DPP { background: #009900; color: white; }
+        .tag-TPP { background: #28c7c7; color: white; }
+        .tag-IND { background: #555; color: white; }
+    </style>
+
+    <script src="/static/js/game.js?v=2"></script>
+</body>
+</html>

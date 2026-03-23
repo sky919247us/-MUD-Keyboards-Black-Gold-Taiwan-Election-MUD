@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>鍵盤與黑金：台灣選戰 MUD</title>
+<script type='text/javascript' nonce='f7GzfgQZfBT6T19lkPZp8w==' src='https://contribution.usercontent.google.com/LGS6rNi4nELXP8gdOGa-6e7rbQqQiqe_TYZUpkrr_sOQPTizOi_WfbZx03h5Uxj2QbRXH3nNyZwIOwdql5CWlqFX5UUEw0xkxT6BKxPpe793KH3tGgH8QTqpZ7j8cwqp6ZVDpVrS33ulwctCJBzvzJCOazsmPhhKj2iUACPtAAELKwpIb8qfi0yzA7LaNfUtKPATSXf1pVGz5VRdAf4RbyIBFU4z-K4HMozKiuhcLsIgwpQeLXjSmnP0j0j4pyRakq_RCF6mCgJyCIRRv9-CbyRhn2WKq-u-zJfKL2b9nHaAQXOw_exnUXv7sEugIhEI8GX0wnDmiINFAmvuDhNEFcoveXosKs1cMv0HZFRb4kIy_9p9hydbOqaHzjKRW6WHHPjMC5AZMFS2qBYk-GMdnNJdvKraIKJGftTq6qsPrIPsxiQBoTmR4EC6tyagwUOKf3fHweMGsw_dxge94tvsJkgewxMx8DryToACsmWUy-GrazIcn7dqV2Ce0dCWUolOfEyKFYDOPcsjgRVEyn4KErVYx_bIs6z_SNOxNWO7z6iJnFC9iDh9ZKJ5zRVrTXq27sPFB7YZd5I9E84qUV-go9SYXpMEUBH7K04JRd1qFPxOTrN7tfJrAS25XlIXZoa0t2s93l9McO4LTv0zhD9rv-WAN1Ab8kYPz3fEen6k-Mv_4ukZrt-YjWwe3dmDhTCI4A8s5TSWpfzYeLF-mEoHldjDdEXXXzN_TDYoGswNJ8t_JULQRfrU5VxiBqTArUHGVnBavklLAoD6AVW0GDbTQ2tKbnhIkj0tCS9vTK5l'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+TC:wght@400;700;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#05326f",
+                        "primary-container": "#2ff801",
+                        "outline-variant": "#46484b",
+                        "surface-variant": "#23262a",
+                        "on-primary": "#0d6100",
+                        "surface-bright": "#292c31",
+                        "inverse-primary": "#106f00",
+                        "tertiary-container": "#fc003b",
+                        "secondary-fixed-dim": "#a9c3ff",
+                        "surface-container": "#171a1d",
+                        "on-error-container": "#ffd2c8",
+                        "secondary": "#99b8fe",
+                        "surface-container-highest": "#23262a",
+                        "on-surface": "#f9f9fd",
+                        "on-secondary-container": "#bdd0ff",
+                        "tertiary": "#ff7073",
+                        "secondary-fixed": "#bfd1ff",
+                        "surface": "#0c0e11",
+                        "on-tertiary-fixed": "#3a0006",
+                        "primary-fixed-dim": "#2be800",
+                        "surface-container-lowest": "#000000",
+                        "on-primary-container": "#0b5800",
+                        "surface-container-high": "#1d2024",
+                        "on-background": "#f9f9fd",
+                        "error-container": "#b92902",
+                        "on-secondary": "#0a3471",
+                        "on-tertiary-fixed-variant": "#790017",
+                        "secondary-dim": "#8babef",
+                        "tertiary-dim": "#e90036",
+                        "on-primary-fixed": "#064200",
+                        "surface-dim": "#0c0e11",
+                        "on-error": "#450900",
+                        "error-dim": "#d53d18",
+                        "primary-fixed": "#2ff801",
+                        "on-surface-variant": "#aaabaf",
+                        "inverse-surface": "#f9f9fd",
+                        "secondary-container": "#224583",
+                        "tertiary-fixed-dim": "#ff7a7c",
+                        "tertiary-fixed": "#ff9191",
+                        "primary": "#8eff71",
+                        "on-tertiary": "#49000a",
+                        "inverse-on-surface": "#535559",
+                        "error": "#ff7351",
+                        "surface-container-low": "#111417",
+                        "on-tertiary-container": "#000000",
+                        "surface-tint": "#8eff71",
+                        "outline": "#747579",
+                        "on-primary-fixed-variant": "#0d6200",
+                        "primary-dim": "#2be800",
+                        "on-secondary-fixed-variant": "#2d4f8d",
+                        "background": "#0c0e11"
+                    },
+                    fontFamily: {
+                        "headline": ["Space Grotesk", "Noto Sans TC"],
+                        "body": ["Inter", "Noto Sans TC"],
+                        "label": ["Space Grotesk", "Noto Sans TC"]
+                    },
+                    borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0c0e11;
+            background-image: repeating-linear-gradient(0deg, rgba(142, 255, 113, 0.03) 0px, rgba(142, 255, 113, 0.03) 1px, transparent 1px, transparent 2px);
+            background-size: 100% 2px;
+        }
+        .scanline {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+            z-index: 100;
+            pointer-events: none;
+            background-size: 100% 2px, 3px 100%;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body text-on-surface selection:bg-primary selection:text-on-primary">
+<div class="scanline"></div>
+<!-- TopAppBar -->
+<header class="fixed top-0 w-full z-50 bg-[#0c0e11] flex justify-between items-center px-4 py-2 w-full border-b-4 border-[#0c0e11] shadow-[0_2px_0_0_rgba(142,255,113,0.1)]">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[#8eff71]" data-icon="terminal">terminal</span>
+<h1 class="text-[#8eff71] font-bold text-lg font-[&#39;Space_Grotesk&#39;] uppercase tracking-tighter">$0 | 50% POP | IND</h1>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#8eff71] active:translate-y-0.5 cursor-pointer" data-icon="sensors">sensors</span>
+</div>
+</header>
+<main class="pt-16 pb-24 px-4 space-y-8">
+<!-- Hero Section -->
+<section class="relative aspect-[4/5] w-full bg-surface-container-lowest border-2 border-primary/20 overflow-hidden">
+<div class="absolute inset-0 opacity-40 mix-blend-screen">
+<img alt="Cyberpunk terminal interface" class="w-full h-full object-cover" data-alt="Abstract green cyber terminal pixel data grid" src="https://lh3.googleusercontent.com/aida-public/AB6AXuADOyYqXVzaPDIAkh5ioNx0J8PMzFG0hIxsW-3nALwoWo899HNHHSjCoY5uf6EJMN_yrFkYCR7_9P-K-GtUCCYLexD5vOUf3YboqbH6PlmY4yNLZcbEeCwVBUXOOMklXk2d5ViouabaskYVN7jAxXfXET_SVmXSLDqYvarLBz0H3Axp8VfnjG_xyetZziHmD-zuCTxJXs-9tSLaAJpMvrzpOuGsz3o2wbHmwbKSNM0zwE5bn27z0JwgG4uGNuZYdEUP4rlLEIq_7ArM"/>
+</div>
+<div class="relative h-full flex flex-col justify-end p-6 bg-gradient-to-t from-background via-background/60 to-transparent">
+<div class="space-y-2 mb-6">
+<div class="inline-block bg-primary text-on-primary text-[10px] font-bold px-2 py-0.5 tracking-widest uppercase mb-2">
+                        System Online: v2.4.0
+                    </div>
+<h2 class="text-4xl font-black font-headline leading-none tracking-tighter text-on-surface">
+                        鍵盤與黑金：<br/>
+<span class="text-primary">台灣選戰 MUD</span>
+</h2>
+<p class="text-secondary text-sm font-medium leading-relaxed max-w-[80%]">
+                        這不是一場遊戲。這是一場高風險的政治博弈。在數據與權力的交界處，定義你的陣營。
+                    </p>
+</div>
+<!-- Pixel Art Icons Representation -->
+<div class="flex gap-4 items-center mb-8">
+<div class="p-3 bg-surface-container-high border-b-2 border-primary">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="keyboard">keyboard</span>
+</div>
+<span class="text-primary font-bold">+</span>
+<div class="p-3 bg-surface-container-high border-b-2 border-tertiary">
+<span class="material-symbols-outlined text-tertiary text-3xl" data-icon="how_to_vote">how_to_vote</span>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary font-black py-4 text-xl tracking-widest active:skew-x-2 transition-transform uppercase">
+                    JOIN THE WAR ROOM
+                </button>
+</div>
+</section>
+<!-- Status Overview: Bento Style -->
+<section class="grid grid-cols-2 gap-4">
+<div class="col-span-1 bg-surface-container-high p-4 border-l-4 border-secondary flex flex-col justify-between aspect-square">
+<div class="text-[10px] font-bold text-secondary-dim tracking-widest uppercase">Active Agents</div>
+<div class="text-4xl font-black text-secondary font-headline">12,842</div>
+<div class="flex items-center gap-1">
+<div class="h-1 w-full bg-secondary/20 overflow-hidden">
+<div class="h-full bg-secondary w-3/4"></div>
+</div>
+</div>
+</div>
+<div class="col-span-1 bg-surface-container-high p-4 border-l-4 border-tertiary flex flex-col justify-between aspect-square">
+<div class="text-[10px] font-bold text-tertiary tracking-widest uppercase">Aggro Level</div>
+<div class="text-4xl font-black text-tertiary font-headline">CRITICAL</div>
+<div class="text-[10px] text-tertiary-dim leading-tight">SYSTEM UNDER HEAVY LOAD</div>
+</div>
+</section>
+<!-- News Feed Section -->
+<section class="space-y-4">
+<div class="flex justify-between items-end border-b border-outline/20 pb-2">
+<h3 class="font-headline font-bold text-lg tracking-tight flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-sm" data-icon="cycle">cycle</span>
+                    即時選情報告
+                </h3>
+<span class="text-[10px] font-bold text-outline uppercase tracking-widest">Live Updates</span>
+</div>
+<div class="space-y-[2px]">
+<!-- News Item 1 -->
+<article class="bg-surface-container-low p-4 flex gap-4 items-start hover:bg-surface-container-high transition-colors">
+<div class="shrink-0 pt-1">
+<span class="material-symbols-outlined text-primary" data-icon="trending_up">trending_up</span>
+</div>
+<div>
+<div class="flex gap-2 items-center mb-1">
+<span class="text-[10px] bg-primary/10 text-primary px-1 font-bold">民意</span>
+<span class="text-[10px] text-outline font-mono">14:02:55</span>
+</div>
+<h4 class="text-on-surface font-bold">某黨知名度上升：社群媒體攻勢奏效</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">網路聲量提升 15%，主要受惠於年輕選民支持。</p>
+</div>
+</article>
+<!-- News Item 2 -->
+<article class="bg-surface-container-highest p-4 flex gap-4 items-start hover:bg-surface-container-high transition-colors">
+<div class="shrink-0 pt-1">
+<span class="material-symbols-outlined text-tertiary" data-icon="bar_chart">bar_chart</span>
+</div>
+<div>
+<div class="flex gap-2 items-center mb-1">
+<span class="text-[10px] bg-tertiary/10 text-tertiary px-1 font-bold">股市</span>
+<span class="text-[10px] text-outline font-mono">13:45:12</span>
+</div>
+<h4 class="text-on-surface font-bold">股市大跌 3%：選前不確定性加劇</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">外資加速撤出，各黨經濟政策成為選戰攻防焦點。</p>
+</div>
+</article>
+<!-- News Item 3 -->
+<article class="bg-surface-container-low p-4 flex gap-4 items-start border-l-4 border-tertiary hover:bg-surface-container-high transition-colors">
+<div class="shrink-0 pt-1">
+<span class="material-symbols-outlined text-tertiary" data-icon="bolt" data-weight="fill" style="font-variation-settings: &#39;FILL&#39; 1;">bolt</span>
+</div>
+<div>
+<div class="flex gap-2 items-center mb-1">
+<span class="text-[10px] bg-tertiary text-on-tertiary px-1 font-bold">緊急危機</span>
+<span class="text-[10px] text-outline font-mono">12:10:00</span>
+</div>
+<h4 class="text-tertiary font-black uppercase">危機：大跳電！全台工業區受影響</h4>
+<p class="text-xs text-on-surface-variant mt-1 leading-relaxed">能源政策再度引發爭議，反對派發動大規模遊行。</p>
+</div>
+</article>
+</div>
+</section>
+<!-- Bottom CTA / Secondary Hero -->
+<section class="bg-surface-container-lowest p-6 border-2 border-secondary/20 space-y-4">
+<h3 class="font-headline font-bold text-secondary">控制權力，或被權力控制</h3>
+<p class="text-xs text-on-surface-variant leading-relaxed">
+                這是一款基於真實政治邏輯的文字冒險遊戲。每一筆資金、每一次宣傳、每一場抹黑，都將深刻影響虛擬台灣的未來。
+            </p>
+<div class="flex gap-2 pt-2">
+<button class="flex-1 bg-secondary text-on-secondary font-bold py-2 text-sm uppercase">Tutorial</button>
+<button class="flex-1 border border-outline/40 text-on-surface font-bold py-2 text-sm uppercase">Discord</button>
+</div>
+</section>
+</main>
+<!-- BottomNavBar -->
+<nav class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 bg-[#0c0e11] z-50 border-t-2 border-[#8eff71]/20 font-[&#39;Space_Grotesk&#39;] text-[10px] font-bold">
+<a class="flex flex-col items-center justify-center bg-[#8eff71] text-[#0c0e11] p-2 scale-105" href="#">
+<span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>
+<span>NEWS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+<span>GAME</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span>MARKETS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="person_pin">person_pin</span>
+<span>PROFILE</span>
+</a>
+</nav>
+</body></html>

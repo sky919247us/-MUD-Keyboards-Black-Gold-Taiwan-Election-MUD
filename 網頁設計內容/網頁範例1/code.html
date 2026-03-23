@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Noto+Sans+TC:wght@400;500;700;900&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script type='text/javascript' nonce='KhilLDVJfE1MxN6CE43I8A==' src='https://contribution.usercontent.google.com/KeQb9cLablkP5MiFxrdEmuOBb7BWypaCjP1bKVUZhERBXL6Om-EgLYHvP-YkIc8qfyz1WPnYb11WI7gzscb1DjEL4_nz1zZr69w4kK0U0yLpI5euCmaG_pmLvFUT5NewdN5qKRKn3tts86JXwW_nChUY0lrz4qfW2K6usDHgaSy-A8B60CoY0nNTxsXSYjyc0cYs7Y2lLVS1GM9nG2BxPM0G7eS_G8dIbPj0olcfohXO8BzOx1hLYg4aUiZC_WxU13Gn_Ul-pUn_pnEUSsh6t67Ju1f-87jM-9QpNd2j-nyggfZBG_FYg1i81UoJw5uGOLb3Yn-M649yOwiSpuzAz3hn46lAMy89rSGWpi_ihoqIcWaoAG2pvi_fTCLXwiD4ERQdqZk6ADQ552FoYtpz43nCjdDcr2UdRMrvrfiatkuUxIjL5gSmBv4RlI5nC80ZgfwOjbC_YLm9qSOks3nkCkqy5wKxZBV3wLg2EzW39mWyVO0lkZ1zMLIaSofad37I4dLGrHim4v1TQsGPtLpWxfpHCImO-0je8i7BZ2vvyNGqxaten9w69ORHul_N4cf0K5_C5MbzXYXqFYD8asqmwuRctwNB7ecGISaiEy4RnMEIbOb4xm1gJ6YXnrMHV6EZXLBSlWQfcIKXeMQy6-avm5h-KGDghQ3NMhVS6lugQw3MgpAdPUoAc1zuAEmZ9S9ZVsh7U4xXJhCOiwo_XqQIKA040urPgH-QN2DhJ2Ug8FWXyuCBpfLrlOg5uQBqOAK3qJa5NI7bx11zPuMe4sUCOeEWuSg1EI8dQszMSj5j'></script><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "on-secondary-fixed": "#05326f",
+                "primary-container": "#2ff801",
+                "outline-variant": "#46484b",
+                "surface-variant": "#23262a",
+                "on-primary": "#0d6100",
+                "surface-bright": "#292c31",
+                "inverse-primary": "#106f00",
+                "tertiary-container": "#fc003b",
+                "secondary-fixed-dim": "#a9c3ff",
+                "surface-container": "#171a1d",
+                "on-error-container": "#ffd2c8",
+                "secondary": "#99b8fe",
+                "surface-container-highest": "#23262a",
+                "on-surface": "#f9f9fd",
+                "on-secondary-container": "#bdd0ff",
+                "tertiary": "#ff7073",
+                "secondary-fixed": "#bfd1ff",
+                "surface": "#0c0e11",
+                "on-tertiary-fixed": "#3a0006",
+                "primary-fixed-dim": "#2be800",
+                "surface-container-lowest": "#000000",
+                "on-primary-container": "#0b5800",
+                "surface-container-high": "#1d2024",
+                "on-background": "#f9f9fd",
+                "error-container": "#b92902",
+                "on-secondary": "#0a3471",
+                "on-tertiary-fixed-variant": "#790017",
+                "secondary-dim": "#8babef",
+                "tertiary-dim": "#e90036",
+                "on-primary-fixed": "#064200",
+                "surface-dim": "#0c0e11",
+                "on-error": "#450900",
+                "error-dim": "#d53d18",
+                "primary-fixed": "#2ff801",
+                "on-surface-variant": "#aaabaf",
+                "inverse-surface": "#f9f9fd",
+                "secondary-container": "#224583",
+                "tertiary-fixed-dim": "#ff7a7c",
+                "tertiary-fixed": "#ff9191",
+                "primary": "#8eff71",
+                "on-tertiary": "#49000a",
+                "inverse-on-surface": "#535559",
+                "error": "#ff7351",
+                "surface-container-low": "#111417",
+                "on-tertiary-container": "#000000",
+                "surface-tint": "#8eff71",
+                "outline": "#747579",
+                "on-primary-fixed-variant": "#0d6200",
+                "primary-dim": "#2be800",
+                "on-secondary-fixed-variant": "#2d4f8d",
+                "background": "#0c0e11"
+              },
+              fontFamily: {
+                "headline": ["Space Grotesk", "Noto Sans TC"],
+                "body": ["Inter", "Noto Sans TC"],
+                "label": ["Space Grotesk", "Noto Sans TC"]
+              },
+              borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        .scanline {
+            background: linear-gradient(rgba(142, 255, 113, 0.05) 50%, rgba(0, 0, 0, 0) 50%);
+            background-size: 100% 2px;
+            pointer-events: none;
+        }
+        .glitch-hover:active {
+            transform: translateX(-2px);
+            filter: drop-shadow(2px 0px #ff7073);
+        }
+        .terminal-text::after {
+            content: '_';
+            animation: blink 1s infinite;
+            color: #8eff71;
+        }
+        @keyframes blink { 50% { opacity: 0; } }
+        body { background-color: #0c0e11; color: #f9f9fd; font-family: 'Inter', 'Noto Sans TC', sans-serif; overflow-x: hidden; }
+        .sharp-edge { border-radius: 0 !important; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="min-h-screen selection:bg-primary selection:text-on-primary">
+<div class="fixed inset-0 scanline z-50 pointer-events-none"></div>
+<header class="fixed top-0 w-full z-40 bg-[#0c0e11] text-[#8eff71] font-[&#39;Space_Grotesk&#39;] uppercase tracking-tighter border-b-4 border-[#0c0e11] shadow-[0_2px_0_0_rgba(142,255,113,0.1)] flex justify-between items-center px-4 py-2">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="terminal">terminal</span>
+<span class="text-[#8eff71] font-bold text-lg">$0 | 50% POP | IND</span>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#99b8fe] cursor-pointer hover:bg-[#8eff71]/10 p-1" data-icon="sensors">sensors</span>
+</div>
+</header>
+<main class="pt-20 pb-24 px-4 md:px-8 max-w-7xl mx-auto min-h-screen">
+<section class="mb-12">
+<h1 class="font-headline font-black text-4xl md:text-6xl text-primary tracking-tighter uppercase mb-2">
+                選擇你的陣營
+            </h1>
+<p class="font-body text-on-surface-variant max-w-2xl terminal-text">
+                系統初始化中... 正在載入政治勢力數據。請選擇一個陣營以開始滲透。目前的局勢動盪，任何選擇都將改變台灣的未來。
+            </p>
+</section>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-16">
+<div class="group relative bg-surface-container-low border-b-4 border-secondary/20 hover:border-secondary transition-all p-6 flex flex-col justify-between aspect-[3/4]">
+<div class="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-secondary text-4xl" data-icon="castle">castle</span>
+</div>
+<div>
+<h2 class="font-headline text-2xl font-bold text-secondary mb-1">藍色陣營</h2>
+<p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-6">Conservative / 傳統建制</p>
+<div class="space-y-4 font-label text-sm">
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">起始資金</span>
+<span class="text-secondary font-bold">$$$$$</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">隱蔽評級</span>
+<span class="text-secondary font-bold">LOW</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">攻擊潛力</span>
+<span class="text-secondary font-bold">MED</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-secondary text-on-secondary py-3 font-bold uppercase tracking-tighter glitch-hover mt-8">
+                    選擇勢力
+                </button>
+</div>
+<div class="group relative bg-surface-container-low border-b-4 border-primary/20 hover:border-primary transition-all p-6 flex flex-col justify-between aspect-[3/4]">
+<div class="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-primary text-4xl" data-icon="eco">eco</span>
+</div>
+<div>
+<h2 class="font-headline text-2xl font-bold text-primary mb-1">綠色陣營</h2>
+<p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-6">Progressive / 本土革新</p>
+<div class="space-y-4 font-label text-sm">
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">起始資金</span>
+<span class="text-primary font-bold">$$$</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">隱蔽評級</span>
+<span class="text-primary font-bold">MED</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">攻擊潛力</span>
+<span class="text-primary font-bold">HIGH</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-primary text-on-primary py-3 font-bold uppercase tracking-tighter glitch-hover mt-8">
+                    選擇勢力
+                </button>
+</div>
+<div class="group relative bg-surface-container-low border-b-4 border-on-surface/20 hover:border-on-surface transition-all p-6 flex flex-col justify-between aspect-[3/4]">
+<div class="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-on-surface text-4xl" data-icon="flare">flare</span>
+</div>
+<div>
+<h2 class="font-headline text-2xl font-bold text-on-surface mb-1">白色陣營</h2>
+<p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-6">Third Party / 第三勢力</p>
+<div class="space-y-4 font-label text-sm">
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">起始資金</span>
+<span class="text-on-surface font-bold">$$</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">隱蔽評級</span>
+<span class="text-on-surface font-bold">MAX</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">攻擊潛力</span>
+<span class="text-on-surface font-bold">MED</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-on-surface text-surface py-3 font-bold uppercase tracking-tighter glitch-hover mt-8">
+                    選擇勢力
+                </button>
+</div>
+<div class="group relative bg-surface-container-low border-b-4 border-tertiary/20 hover:border-tertiary transition-all p-6 flex flex-col justify-between aspect-[3/4]">
+<div class="absolute top-0 right-0 p-2 opacity-20 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined text-tertiary text-4xl" data-icon="skull">skull</span>
+</div>
+<div>
+<h2 class="font-headline text-2xl font-bold text-tertiary mb-1">黑色陣營</h2>
+<p class="font-label text-xs text-on-surface-variant uppercase tracking-widest mb-6">Black Gold / 灰色產業</p>
+<div class="space-y-4 font-label text-sm">
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">起始資金</span>
+<span class="text-tertiary font-bold">$$$$$$</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">隱蔽評級</span>
+<span class="text-tertiary font-bold">CRIT</span>
+</div>
+<div class="flex justify-between items-end border-b border-outline-variant pb-1">
+<span class="text-on-surface-variant">攻擊潛力</span>
+<span class="text-tertiary font-bold">MAX</span>
+</div>
+</div>
+</div>
+<button class="w-full bg-tertiary text-on-tertiary py-3 font-bold uppercase tracking-tighter glitch-hover mt-8">
+                    選擇勢力
+                </button>
+</div>
+</div>
+<div class="max-w-md mx-auto bg-surface-container-high p-8 shadow-2xl relative">
+<div class="absolute -top-1 -left-1 w-4 h-4 border-t-2 border-l-2 border-primary"></div>
+<div class="absolute -bottom-1 -right-1 w-4 h-4 border-b-2 border-r-2 border-primary"></div>
+<h3 class="font-headline text-xl font-bold text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="fingerprint">fingerprint</span>
+                身分驗證 / LOGIN
+            </h3>
+<form class="space-y-6">
+<div>
+<label class="block font-label text-xs text-on-surface-variant uppercase mb-2 tracking-widest" for="entityId">實體識別碼 ENTITY_ID</label>
+<input class="w-full bg-surface-container-lowest border-0 border-b-2 border-outline focus:border-primary focus:ring-0 text-primary font-mono placeholder:text-outline-variant" id="entityId" placeholder="SYS_ADMIN_XXXX" type="text"/>
+</div>
+<div class="p-3 bg-tertiary/10 border-l-4 border-tertiary">
+<p class="text-[10px] text-tertiary font-bold uppercase leading-tight">
+                        警告：未經授權的訪問將觸發數位防禦系統。所有活動均被監控。
+                    </p>
+</div>
+<button class="w-full bg-primary-container text-on-primary-container py-4 font-black uppercase text-lg tracking-widest glitch-hover flex justify-center items-center gap-3" type="submit">
+                    執行連接
+                    <span class="material-symbols-outlined" data-icon="double_arrow">double_arrow</span>
+</button>
+</form>
+</div>
+</main>
+<footer class="fixed bottom-0 left-0 w-full flex justify-around items-center h-16 bg-[#0c0e11] z-50 border-t-2 border-[#8eff71]/20">
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="newspaper">newspaper</span>
+<span class="font-[&#39;Space_Grotesk&#39;] text-[10px] font-bold">NEWS</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="videogame_asset">videogame_asset</span>
+<span class="font-[&#39;Space_Grotesk&#39;] text-[10px] font-bold">GAME</span>
+</a>
+<a class="flex flex-col items-center justify-center text-[#99b8fe] p-2 hover:bg-[#99b8fe]/10 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="trending_up">trending_up</span>
+<span class="font-[&#39;Space_Grotesk&#39;] text-[10px] font-bold">MARKETS</span>
+</a>
+<a class="flex flex-col items-center justify-center bg-[#8eff71] text-[#0c0e11] p-2 scale-105 active:skew-x-2" href="#">
+<span class="material-symbols-outlined" data-icon="person_pin" style="font-variation-settings: &#39;FILL&#39; 1;">person_pin</span>
+<span class="font-[&#39;Space_Grotesk&#39;] text-[10px] font-bold">PROFILE</span>
+</a>
+</footer>
+</body></html>

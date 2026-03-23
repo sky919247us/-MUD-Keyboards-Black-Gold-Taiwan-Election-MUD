@@ -1,0 +1,21 @@
+{
+  "name": "鍵盤與黑金：台灣選戰 MUD",
+  "short_name": "台灣選戰 MUD",
+  "description": "台灣現代選戰硬核文字 MUD 政治模擬遊戲",
+  "start_url": "/?source=pwa",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/static/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/static/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
