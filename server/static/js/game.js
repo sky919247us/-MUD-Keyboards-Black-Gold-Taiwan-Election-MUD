@@ -175,6 +175,10 @@ async function checkCharacterData(uid) {
 
 /** 顯示角色建立畫面 */
 function showCreationScreen() {
+  console.log(">>> showCreationScreen 被呼叫了！");
+  // 直接用 inline style 控制，避免 CSS class 權重 / 快取問題
+  screenLoading.style.display = "none";
+  screenCreation.style.display = "block";
   screenLoading.classList.remove("active");
   screenCreation.classList.add("active");
 }
