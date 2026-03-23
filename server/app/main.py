@@ -26,6 +26,7 @@ from app.models.character import generateCharacter
 from app.models.party import PARTIES, getPartyByCode
 from app.db.session import engine, Base
 from app.core.security import generate_ws_token, verify_ws_token
+from app.api import line_auth
 
 # ── 日誌 ──────────────────────────────────────────────────────
 logging.basicConfig(
@@ -146,6 +147,7 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
+app.include_router(line_auth.router)
 
 # ── 路由 (PWA 頁面) ──────────────────────────────────────────
 @app.get("/", response_class=HTMLResponse)

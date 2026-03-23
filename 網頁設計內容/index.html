@@ -1,112 +1,242 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
+<html class="dark" lang="zh-TW">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>鍵盤與黑金：台灣選戰 MUD | 官方網站</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Noto+Sans+TC:wght@400;700;900&display=swap" rel="stylesheet">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>鍵盤與黑金：台灣選戰 MUD | 官方網站</title>
+  <meta name="description" content="一場沒有硝煙的政治戰爭。加入 LINE 官方帳號，成為幕後最強的政治幕僚。">
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@400;500;700;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#8eff71",
+            "on-primary": "#0d6100",
+            "secondary": "#99b8fe",
+            "tertiary": "#ff7073",
+            "surface": "#0c0e11",
+            "surface-low": "#111417",
+            "surface-container": "#171a1d",
+            "surface-high": "#1d2024",
+            "on-surface": "#f9f9fd",
+            "on-surface-dim": "#aaabaf",
+            "outline": "#747579",
+            "outline-variant": "#46484b",
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk", "Noto Sans TC"],
+            "body": ["Inter", "Noto Sans TC"],
+          },
+          borderRadius: { "DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px" },
+        },
+      },
+    }
+  </script>
+  <style>
+    body { background-color: #0c0e11; color: #f9f9fd; font-family: 'Inter', 'Noto Sans TC', sans-serif; overflow-x: hidden; }
+    .scanline {
+      position: fixed; inset: 0;
+      background: linear-gradient(rgba(142, 255, 113, 0.04) 50%, rgba(0, 0, 0, 0) 50%);
+      background-size: 100% 3px;
+      pointer-events: none; z-index: 9999;
+    }
+    .glitch-hover:active { transform: translateX(-2px); filter: drop-shadow(2px 0 #ff7073); }
+    .terminal-text::after { content: '_'; animation: blink 1s infinite; color: #8eff71; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .pulse-glow { animation: pulseGlow 2s ease-in-out infinite; }
+    @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 0 0 rgba(142, 255, 113, 0.3); } 50% { box-shadow: 0 0 20px 4px rgba(142, 255, 113, 0.3); } }
+  </style>
 </head>
-<body>
-    <div class="scanlines"></div>
-    
-    <header class="hero-section">
-        <div class="glitch-wrapper">
-            <h1 class="glitch" data-text="鍵盤與黑金">鍵盤與黑金</h1>
-            <h2 class="subtitle">TAIWAN ELECTION MUD</h2>
+<body class="selection:bg-primary selection:text-on-primary">
+
+<div class="scanline"></div>
+
+<!-- 頂部導覽 -->
+<header class="fixed top-0 w-full z-40 bg-[#0c0e11] border-b border-[#8eff71]/10 flex justify-between items-center px-4 py-3">
+  <div class="flex items-center gap-2 font-headline font-bold text-primary text-sm uppercase tracking-tighter">
+    <span class="material-symbols-outlined" style="font-size:18px">terminal</span>
+    鍵盤與黑金 MUD
+  </div>
+  <nav class="hidden md:flex gap-6 text-xs text-on-surface-dim font-headline uppercase tracking-wide">
+    <a href="#about" class="hover:text-primary transition-colors">遊戲介紹</a>
+    <a href="#mechanics" class="hover:text-primary transition-colors">核心機制</a>
+    <a href="#crisis" class="hover:text-primary transition-colors">危機事件</a>
+    <a href="#cta" class="hover:text-primary transition-colors">立即加入</a>
+  </nav>
+</header>
+
+<!-- Hero Section -->
+<section class="min-h-screen flex flex-col justify-end px-4 pt-24 pb-8 relative overflow-hidden">
+  <!-- 背景動態格線 -->
+  <div class="absolute inset-0 opacity-5" style="background-image: repeating-linear-gradient(0deg, #8eff71 0, #8eff71 1px, transparent 1px, transparent 40px), repeating-linear-gradient(90deg, #8eff71 0, #8eff71 1px, transparent 1px, transparent 40px);"></div>
+
+  <div class="relative z-10 space-y-4 mb-10">
+    <div class="inline-block bg-primary text-on-primary text-[10px] font-headline font-bold px-2 py-0.5 tracking-widest uppercase mb-2">
+      System Online: v2.4.0
+    </div>
+    <h1 class="font-headline font-black text-5xl md:text-7xl leading-none tracking-tighter text-on-surface">
+      鍵盤與黑金：<br><span class="text-primary">台灣選戰 MUD</span>
+    </h1>
+    <p class="text-secondary text-sm font-medium leading-relaxed max-w-md terminal-text">
+      政治，是一場沒有硝煙的戰爭。鍵盤，就是你最強的武器。
+    </p>
+  </div>
+
+  <!-- Bento 數據面板 -->
+  <div class="grid grid-cols-3 gap-2 mb-8 max-w-lg">
+    <div class="bg-surface-container border-b-2 border-secondary p-3 text-center">
+      <div class="text-xs text-secondary font-headline font-bold uppercase mb-1">Active Agents</div>
+      <div class="text-2xl font-black text-secondary font-headline">12K+</div>
+    </div>
+    <div class="bg-surface-container border-b-2 border-primary p-3 text-center">
+      <div class="text-xs text-primary font-headline font-bold uppercase mb-1">次/天 AI 結算</div>
+      <div class="text-2xl font-black text-primary font-headline">144</div>
+    </div>
+    <div class="bg-surface-container border-b-2 border-tertiary p-3 text-center">
+      <div class="text-xs text-tertiary font-headline font-bold uppercase mb-1">危機事件種類</div>
+      <div class="text-2xl font-black text-tertiary font-headline">5+</div>
+    </div>
+  </div>
+
+  <a href="https://liff.line.me/2009558875-PiJYcJDN" target="_blank" rel="noopener noreferrer"
+     class="w-full max-w-lg bg-primary text-on-primary py-4 font-headline font-black text-lg tracking-widest uppercase text-center flex items-center justify-center gap-3 glitch-hover pulse-glow transition-all">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.236 2.636 7.855 6.356 9.312-.088-.791-.167-2.005.035-2.868.181-.78 1.172-4.97 1.172-4.97s-.299-.598-.299-1.482c0-1.388.806-2.428 1.808-2.428.852 0 1.264.64 1.264 1.408 0 .858-.546 2.14-.828 3.33-.236.995.499 1.806 1.48 1.806 1.773 0 3.141-1.872 3.141-4.573 0-2.39-1.718-4.061-4.169-4.061-2.84 0-4.508 2.13-4.508 4.332 0 .858.33 1.776.741 2.281a.3.3 0 0 1 .069.286c-.076.313-.244.995-.277 1.134-.044.183-.146.222-.337.134-1.249-.581-2.03-2.407-2.03-3.874 0-3.154 2.292-6.052 6.608-6.052 3.469 0 6.165 2.473 6.165 5.776 0 3.447-2.173 6.22-5.19 6.22-1.013 0-1.966-.527-2.292-1.148l-.623 2.378c-.226.869-.835 1.958-1.244 2.621.937.29 1.931.446 2.962.446 5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+    </svg>
+    以 LINE 進入戰場
+  </a>
+</section>
+
+<!-- 遊戲特色 Bento Grid -->
+<section id="about" class="px-4 py-16 max-w-2xl mx-auto">
+  <div class="mb-10">
+    <div class="text-xs font-headline font-bold text-outline uppercase tracking-widest mb-2">Game Overview</div>
+    <h2 class="font-headline font-black text-3xl tracking-tighter">這不是一場遊戲。<br><span class="text-primary">這是一場高風險的政治博弈。</span></h2>
+  </div>
+
+  <div class="grid grid-cols-1 gap-2">
+    <div class="bg-surface-container p-5 border-l-4 border-secondary">
+      <div class="flex items-center gap-2 mb-2">
+        <span class="material-symbols-outlined text-secondary" style="font-size:20px">groups</span>
+        <div class="text-xs font-headline font-bold text-secondary uppercase tracking-widest">陣營共享</div>
+      </div>
+      <p class="text-sm text-on-surface-dim leading-relaxed">結盟同梯幕僚，共同經營 Boss 的知名度、好感度與政治獻金。一個陣營的勝敗，取決於全體幕僚的協同作戰。</p>
+    </div>
+    <div class="grid grid-cols-2 gap-2">
+      <div class="bg-surface-container p-5 border-l-4 border-primary">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-primary" style="font-size:20px">monitoring</span>
+          <div class="text-xs font-headline font-bold text-primary uppercase tracking-widest">現實連動</div>
         </div>
-        <p class="tagline">政治，是一場沒有硝煙的戰爭。<br>鍵盤，就是你最強的武器。</p>
-        <a href="#play-now" class="cyber-btn primary-btn">>>> SYSTEM.LOGIN( )</a>
-    </header>
+        <p class="text-xs text-on-surface-dim leading-relaxed">台股大盤、氣象署資料即時影響選情。股災加劇政治危機，颱風考驗制度智慧。</p>
+      </div>
+      <div class="bg-surface-container p-5 border-l-4 border-tertiary">
+        <div class="flex items-center gap-2 mb-2">
+          <span class="material-symbols-outlined text-tertiary" style="font-size:20px">bolt</span>
+          <div class="text-xs font-headline font-bold text-tertiary uppercase tracking-widest">動態危機</div>
+        </div>
+        <p class="text-xs text-on-surface-dim leading-relaxed">跳電事件、網軍翻車、豆腐渣工程...危機隨時爆發，考驗危機處理能力。</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <nav class="sticky-nav">
-        <a href="#about">遊戲簡介</a>
-        <a href="#mechanics">核心機制</a>
-        <a href="#crisis">危機連動</a>
-        <a href="#economy">地下經濟</a>
-    </nav>
+<!-- 核心機制 -->
+<section id="mechanics" class="px-4 py-12 bg-surface-low">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-xs font-headline font-bold text-outline uppercase tracking-widest mb-2">Core Mechanics</div>
+    <h2 class="font-headline font-black text-3xl tracking-tighter mb-8">終端機指令手冊</h2>
 
-    <main class="content-wrapper">
-        <section id="about" class="cyber-panel">
-            <h2 class="panel-title">▍ 壹、遊戲背景介紹 ▍</h2>
-            <div class="panel-content">
-                <p>《鍵盤與黑金：台灣選戰 MUD》是一款結合「文字 MUD」、「即時資料陣營對抗」與「現實大數據連動」的硬核政治模擬遊戲。</p>
-                <p>在這個遊戲中，您並非扮演台面上的政治明星，而是隱身於幕後的<span class="highlight">「政治幕僚」</span>。透過操控網軍、發動公關戰、洗白黑金，甚至利用現實天氣與股市行情，幫助所屬陣營的老闆累積資源，奪取全台霸主地位！</p>
-                <ul class="feature-list">
-                    <li><span class="highlight-green">[陣營共享]</span> 結盟同梯幕僚，共同經營 Boss 數值。</li>
-                    <li><span class="highlight-green">[現實連動]</span> 中央氣象署與台股大盤資料即時影響選情。</li>
-                    <li><span class="highlight-green">[動態危機]</span> 隨即觸發跳電、豆腐渣工程與網軍翻車事件。</li>
-                </ul>
-            </div>
-        </section>
+    <div class="space-y-1">
+      <div class="bg-surface-container p-4 flex gap-4 items-start hover:bg-surface-high transition-colors">
+        <span class="material-symbols-outlined text-primary">campaign</span>
+        <div>
+          <code class="text-primary text-sm font-bold">/act 召開政見會</code>
+          <p class="text-xs text-on-surface-dim mt-1">穩定增加知名度，是最安全的日常行動。</p>
+        </div>
+      </div>
+      <div class="bg-surface-container p-4 flex gap-4 items-start hover:bg-surface-high transition-colors">
+        <span class="material-symbols-outlined text-secondary">payments</span>
+        <div>
+          <code class="text-secondary text-sm font-bold">/act 舉辦募款餐會</code>
+          <p class="text-xs text-on-surface-dim mt-1">獲得政治獻金，發動攻防的必備彈藥。</p>
+        </div>
+      </div>
+      <div class="bg-surface-container p-4 flex gap-4 items-start hover:bg-surface-high transition-colors border-l-2 border-tertiary">
+        <span class="material-symbols-outlined text-tertiary">swords</span>
+        <div>
+          <code class="text-tertiary text-sm font-bold">/attack [對手]</code>
+          <p class="text-xs text-on-surface-dim mt-1">耗資發動側翼網軍抹黑，狠降對手好感度。</p>
+        </div>
+      </div>
+      <div class="bg-surface-container p-4 flex gap-4 items-start hover:bg-surface-high transition-colors border-l-2 border-tertiary">
+        <span class="material-symbols-outlined text-tertiary">compare_arrows</span>
+        <div>
+          <code class="text-tertiary text-sm font-bold">/flip [對手] [樁腳ID]</code>
+          <p class="text-xs text-on-surface-dim mt-1">砸錢拔樁，直接瓦解敵方基層實力組織。</p>
+        </div>
+      </div>
+      <div class="bg-surface-container p-4 flex gap-4 items-start hover:bg-surface-high transition-colors">
+        <span class="material-symbols-outlined text-outline">account_balance</span>
+        <div>
+          <code class="text-on-surface text-sm font-bold">/launder [金額]</code>
+          <p class="text-xs text-on-surface-dim mt-1">跨國地下匯兌洗白黑金。查緝越嚴失敗率越高。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <section id="mechanics" class="cyber-panel">
-            <h2 class="panel-title">▍ 貳、核心機制與操作 ▍</h2>
-            <div class="panel-content">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <h3>🏆 知名度</h3>
-                        <p>衡量政治實力的絕對指標，決定排行榜名次。</p>
-                    </div>
-                    <div class="stat-card">
-                        <h3>💖 好感度</h3>
-                        <p>募款效率的關鍵。跌破 0 會引發檢調介入與金主抽腿。</p>
-                    </div>
-                    <div class="stat-card danger">
-                        <h3>👿 仇恨值</h3>
-                        <p>發動側翼攻擊的代價。過高易引發「網軍翻車」公關危機。</p>
-                    </div>
-                </div>
+<!-- 危機事件 -->
+<section id="crisis" class="px-4 py-12">
+  <div class="max-w-2xl mx-auto">
+    <div class="text-xs font-headline font-bold text-outline uppercase tracking-widest mb-2">Crisis Events</div>
+    <h2 class="font-headline font-black text-3xl tracking-tighter mb-8">現實世界，即時連動</h2>
 
-                <h3 class="sub-title">> 終端機指令手冊</h3>
-                <div class="command-box">
-                    <p><code>/act 召開政見會</code> - 穩定增加知名度</p>
-                    <p><code>/act 掃街拜票</code> - 穩健提升好感度，降低負面聲量</p>
-                    <p><code>/act 舉辦募款</code> - 獲得政治獻金（發動攻防必備彈藥）</p>
-                    <p><code>/attack [對手]</code> - <span class="text-danger">耗資發動側翼網軍抹黑，削弱對手</span></p>
-                    <p><code>/flip [對手] [樁腳ID]</code> - <span class="text-danger">砸錢拔樁，瓦解敵方基層實力</span></p>
-                </div>
-            </div>
-        </section>
+    <div class="space-y-2">
+      <div class="bg-[rgba(255,112,115,0.06)] border border-tertiary/30 p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-tertiary" style="font-size:20px">trending_down</span>
+          <div class="font-headline font-bold text-tertiary uppercase text-sm tracking-wide">📉 股災恐慌</div>
+        </div>
+        <p class="text-xs text-on-surface-dim leading-relaxed">若現實台股大跌超過 3%，在野黨幕僚取得攻擊力加倍 Buff；執政黨慘遭好感度重扣。</p>
+      </div>
+      <div class="bg-[rgba(255,112,115,0.06)] border border-tertiary/30 p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-tertiary" style="font-size:20px">thunderstorm</span>
+          <div class="font-headline font-bold text-tertiary uppercase text-sm tracking-wide">🌀 颱風假豪賭</div>
+        </div>
+        <p class="text-xs text-on-surface-dim leading-relaxed">中央氣象署發布大雨特報，觸發颱風假決策事件。放對了名利雙收；放錯了民怨滔天。</p>
+      </div>
+      <div class="bg-[rgba(255,112,115,0.06)] border border-tertiary/30 p-5">
+        <div class="flex items-center gap-2 mb-3">
+          <span class="material-symbols-outlined text-tertiary" style="font-size:20px">crisis_alert</span>
+          <div class="font-headline font-bold text-tertiary uppercase text-sm tracking-wide">🚨 網軍翻車事件</div>
+        </div>
+        <p class="text-xs text-on-surface-dim leading-relaxed">仇恨值過高，側翼帳號遭爆出反串醜聞，好感度瞬間歸零，負評席捲 PTT。</p>
+      </div>
+    </div>
+  </div>
+</section>
 
-        <section id="crisis" class="cyber-panel">
-            <h2 class="panel-title">▍ 參、現實連動與危機事件 ▍</h2>
-            <div class="panel-content">
-                <ul class="crisis-list">
-                    <li>
-                        <strong>💸 股災恐慌 (現實股市連動)</strong>
-                        <p>若現實台股大跌，在野黨幕僚會獲得攻擊力加倍的 Buff；執政黨則慘遭好感度扣減。</p>
-                    </li>
-                    <li>
-                        <strong>🌀 颱風假豪賭 (現實天氣連動)</strong>
-                        <p>氣象署發布大雨警報將觸發「颱風假」事件。放對了名利雙收；放錯了仇恨值飆升。</p>
-                    </li>
-                    <li>
-                        <strong>💥 網軍翻車事件</strong>
-                        <p>如果老闆的「仇恨值」過高，有極高機率被爆出操控網軍醜聞，好感度瞬間歸零。</p>
-                    </li>
-                </ul>
-            </div>
-        </section>
+<!-- CTA -->
+<section id="cta" class="px-4 py-20 bg-surface-low">
+  <div class="max-w-lg mx-auto text-center space-y-6">
+    <h2 class="font-headline font-black text-4xl tracking-tighter">控制權力，<br><span class="text-primary">或被權力控制</span></h2>
+    <p class="text-sm text-on-surface-dim leading-relaxed">
+      每一筆資金、每一次宣傳、每一場抹黑，都將深刻影響虛擬台灣的政治版圖。
+    </p>
+    <a href="https://liff.line.me/2009558875-PiJYcJDN" target="_blank" rel="noopener noreferrer"
+       class="block w-full bg-primary text-on-primary py-4 font-headline font-black text-xl tracking-widest uppercase glitch-hover pulse-glow text-center">
+      現在加入戰場 ▶
+    </a>
+    <p class="text-xs text-outline">© 2026 鍵盤與黑金：台灣選戰 MUD. All rights reserved.</p>
+  </div>
+</section>
 
-        <section id="economy" class="cyber-panel">
-            <h2 class="panel-title">▍ 肆、戰略黑金儀表板 ▍</h2>
-            <div class="panel-content">
-                <p>資金見不得光時，透過地下網路進行資本操作：</p>
-                <div class="command-box">
-                    <p><code>/launder [金額]</code> - 跨國地下匯兌。洗白保留率隨風聲浮動，檢警查緝越嚴，失敗率越高。</p>
-                    <p><code>/invest [代號] [數量]</code> - 投資百大集團概念股（如：紅海帝國）。利用政治資源進行內線交易。</p>
-                </div>
-            </div>
-        </section>
-
-    </main>
-
-    <footer id="play-now" class="footer-cta">
-        <h2>> 系統連線準備完畢_</h2>
-        <p>立刻加入 LINE 官方帳號，綁定幕僚身分開始你的黑金帝國。</p>
-        <a href="https://line.me/R/" class="cyber-btn primary-btn pulse" target="_blank" rel="noopener noreferrer">>> 啟動遊戲終端 <<<</a>
-        <div class="copyright">© 2026 Keyboards & Black Gold Taiwan Election MUD. All rights reserved.</div>
-    </footer>
 </body>
 </html>
