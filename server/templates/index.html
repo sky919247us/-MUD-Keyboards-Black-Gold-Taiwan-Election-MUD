@@ -70,38 +70,38 @@
     </div>
 
     <div class="party-grid" id="party-list">
-      <!-- 藍色陣營 -->
-      <div class="party-card party-blue" data-party="KMT" onclick="selectParty(this)">
-        <span class="material-symbols-outlined party-icon" style="color:var(--color-secondary)">castle</span>
+      <!-- 1. DPF: 民主進步陣線 -->
+      <div class="party-card party-DPF" data-party="DPF" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">eco</span>
         <div>
-          <div class="party-name" style="color:var(--color-secondary)">藍色陣營</div>
-          <div class="party-tag">Conservative / 傳統建制</div>
+          <div class="party-name">民主進步陣線</div>
+          <div class="party-tag">執政黨 / 台股大盤為主</div>
           <div class="party-stats">
-            <div class="party-stat"><span class="party-stat-label">起始資金</span><span style="color:var(--color-secondary)">$$$$$</span></div>
-            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span style="color:var(--color-secondary)">LOW</span></div>
-            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span style="color:var(--color-secondary)">MED</span></div>
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$$$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>MED</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>HIGH</span></div>
           </div>
         </div>
       </div>
-      <!-- 綠色陣營 -->
-      <div class="party-card party-green" data-party="DPP" onclick="selectParty(this)">
-        <span class="material-symbols-outlined party-icon" style="color:var(--color-primary)">eco</span>
+      <!-- 2. NCA: 國家保守聯盟 -->
+      <div class="party-card party-NCA" data-party="NCA" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">castle</span>
         <div>
-          <div class="party-name" style="color:var(--color-primary)">綠色陣營</div>
-          <div class="party-tag">Progressive / 本土革新</div>
+          <div class="party-name">國家保守聯盟</div>
+          <div class="party-tag">最大在野黨 / 天氣為主</div>
           <div class="party-stats">
-            <div class="party-stat"><span class="party-stat-label">起始資金</span><span style="color:var(--color-primary)">$$$</span></div>
-            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span style="color:var(--color-primary)">MED</span></div>
-            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span style="color:var(--color-primary)">HIGH</span></div>
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$$$$$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>LOW</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>MED</span></div>
           </div>
         </div>
       </div>
-      <!-- 白色陣營 -->
-      <div class="party-card party-white" data-party="TPP" onclick="selectParty(this)">
-        <span class="material-symbols-outlined party-icon" style="color:var(--color-on-surface)">flare</span>
+      <!-- 3. NAP: 新世代覺醒黨 -->
+      <div class="party-card party-NAP" data-party="NAP" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">flare</span>
         <div>
-          <div class="party-name" style="color:var(--color-on-surface)">白色陣營</div>
-          <div class="party-tag">Third Party / 第三勢力</div>
+          <div class="party-name">新世代覺醒黨</div>
+          <div class="party-tag">新興第三勢力 / PTT為主</div>
           <div class="party-stats">
             <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$$</span></div>
             <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>MAX</span></div>
@@ -109,16 +109,55 @@
           </div>
         </div>
       </div>
-      <!-- 黑色陣營 -->
-      <div class="party-card party-black" data-party="IND" onclick="selectParty(this)">
-        <span class="material-symbols-outlined party-icon" style="color:var(--color-tertiary)">skull</span>
+      <!-- 4. TBF: 時代制衡力量 -->
+      <div class="party-card party-TBF" data-party="TBF" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">balance</span>
         <div>
-          <div class="party-name" style="color:var(--color-tertiary)">黑色陣營</div>
-          <div class="party-tag">Black Gold / 灰色產業</div>
+          <div class="party-name">時代制衡力量</div>
+          <div class="party-tag">左翼勞工政黨 / PTT勞工</div>
           <div class="party-stats">
-            <div class="party-stat"><span class="party-stat-label">起始資金</span><span style="color:var(--color-tertiary)">$$$$$$</span></div>
-            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span style="color:var(--color-tertiary)">CRIT</span></div>
-            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span style="color:var(--color-tertiary)">MAX</span></div>
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>HIGH</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>MED</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 5. RNF: 激進本土陣線 -->
+      <div class="party-card party-RNF" data-party="RNF" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">whatshot</span>
+        <div>
+          <div class="party-name">激進本土陣線</div>
+          <div class="party-tag">深綠側翼 / 國際新聞</div>
+          <div class="party-stats">
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>MED</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>MAX</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 6. PPU: 小民生活參政聯盟 -->
+      <div class="party-card party-PPU" data-party="PPU" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">family_restroom</span>
+        <div>
+          <div class="party-name">小民生活參政聯盟</div>
+          <div class="party-tag">基層女性 / 地方新聞</div>
+          <div class="party-stats">
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>HIGH</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>LOW</span></div>
+          </div>
+        </div>
+      </div>
+      <!-- 7. EGP: 生態永續綠黨 -->
+      <div class="party-card party-EGP" data-party="EGP" onclick="selectParty(this)">
+        <span class="material-symbols-outlined party-icon">psychiatry</span>
+        <div>
+          <div class="party-name">生態永續綠黨</div>
+          <div class="party-tag">環保微型 / 天氣空污</div>
+          <div class="party-stats">
+            <div class="party-stat"><span class="party-stat-label">起始資金</span><span>$</span></div>
+            <div class="party-stat"><span class="party-stat-label">隱蔽評級</span><span>MAX</span></div>
+            <div class="party-stat"><span class="party-stat-label">攻擊潛力</span><span>MED</span></div>
           </div>
         </div>
       </div>

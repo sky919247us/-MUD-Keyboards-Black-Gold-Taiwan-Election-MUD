@@ -341,15 +341,34 @@ body { -webkit-tap-highlight-color: transparent; }
 }
 .party-stat-label { color: var(--color-on-surface-dim); }
 
-/* 各陣營顏色 */
-.party-blue  { border-bottom-color: rgba(153, 184, 254, 0.25); color: var(--color-secondary); }
-.party-green { border-bottom-color: rgba(142, 255, 113, 0.25); color: var(--color-primary); }
-.party-white { border-bottom-color: rgba(249, 249, 253, 0.25); color: var(--color-on-surface); }
-.party-black { border-bottom-color: rgba(255, 112, 115, 0.25); color: var(--color-tertiary); }
-.party-blue.selected  { border-bottom-color: var(--color-secondary); }
-.party-green.selected { border-bottom-color: var(--color-primary); }
-.party-white.selected { border-bottom-color: var(--color-on-surface); }
-.party-black.selected { border-bottom-color: var(--color-tertiary); }
+/* 各陣營顏色設定 (7 大陣營) */
+/* 1. DPF: 民主進步陣線 (綠) */
+.party-DPF { border-bottom-color: rgba(142, 255, 113, 0.25); color: var(--color-primary); }
+.party-DPF.selected { border-bottom-color: var(--color-primary); }
+
+/* 2. NCA: 國家保守聯盟 (藍) */
+.party-NCA { border-bottom-color: rgba(153, 184, 254, 0.25); color: var(--color-secondary); }
+.party-NCA.selected { border-bottom-color: var(--color-secondary); }
+
+/* 3. NAP: 新世代覺醒黨 (白) */
+.party-NAP { border-bottom-color: rgba(249, 249, 253, 0.25); color: var(--color-on-surface); }
+.party-NAP.selected { border-bottom-color: var(--color-on-surface); }
+
+/* 4. TBF: 時代制衡力量 (黃，因無預設，自訂亮黃色) */
+.party-TBF { border-bottom-color: rgba(255, 221, 51, 0.25); color: #FFDD33; }
+.party-TBF.selected { border-bottom-color: #FFDD33; }
+
+/* 5. RNF: 激進本土陣線 (深綠/紅，使用危機紅色) */
+.party-RNF { border-bottom-color: rgba(255, 112, 115, 0.25); color: var(--color-tertiary); }
+.party-RNF.selected { border-bottom-color: var(--color-tertiary); }
+
+/* 6. PPU: 小民生活參政聯盟 (粉紅/紫) */
+.party-PPU { border-bottom-color: rgba(255, 153, 204, 0.25); color: #FF99CC; }
+.party-PPU.selected { border-bottom-color: #FF99CC; }
+
+/* 7. EGP: 生態永續綠黨 (青色/薄荷綠) */
+.party-EGP { border-bottom-color: rgba(0, 255, 204, 0.25); color: #00FFCC; }
+.party-EGP.selected { border-bottom-color: #00FFCC; }
 
 /* --- 遊戲主畫面 --- */
 #screen-game {
