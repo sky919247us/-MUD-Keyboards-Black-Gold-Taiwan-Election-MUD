@@ -36,6 +36,7 @@ if ("serviceWorker" in navigator) {
  */
 async function startLineLogin() {
   const btn = document.getElementById("btn-line-login");
+  const devBtn = document.getElementById("btn-dev-login");
   btn.textContent = "連接中...";
   btn.disabled = true;
 
@@ -62,18 +63,26 @@ async function startLineLogin() {
 
   } catch (err) {
     console.error("LIFF Init error:", err);
-    // NOTE: 開發模式 fallback（非 LINE 環境中測試用）
-    if (err.code === "INIT_FAILED" || window.location.hostname === "localhost") {
-      console.warn("非 LINE 環境，啟用開發模式 fallback");
-      userId = "dev_user_001";
-      document.getElementById("header-status").textContent = "開發模式";
-      await checkCharacterData(userId);
-    } else {
-      btn.textContent = "以 LINE 帳號登入";
-      btn.disabled = false;
-      alert("LIFF 初始化失敗，請在 LINE App 中開啟此頁面。");
+    btn.textContent = "以 LINE 帳號登入";
+    btn.disabled = false;
+    
+    // 如果是初始化失敗（通常是因為不是 HTTPS 或 Endpoint 不對），提示使用者可以使用開發模式
+    if (confirm("LIFF 初始化失敗（可能因非 HTTPS 環境）。是否要切換至「開發者匿名模式」進行測試？")) {
+      enterDevMode();
     }
   }
+}
+
+/**
+ * 手動進入開發者模式（不需 LINE 認證）
+ */
+async function enterDevMode() {
+  console.warn("啟用開發模式進入系統...");
+  userId = "dev_user_" + Math.floor(Math.random() * 1000); // 隨機生成一個 ID
+  document.getElementById("header-status").textContent = "匿名訪客 (" + userId + ")";
+  
+  // 直接進入角色檢查流程（此時後端會因為找不到這個 UID 而引導至建角畫面）
+  await bindLineAndCheckCharacter(userId, "匿名玩家", "");
 }
 
 /**
