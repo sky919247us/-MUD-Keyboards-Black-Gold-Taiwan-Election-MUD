@@ -120,7 +120,7 @@ class GameWorld:
         for data in npc_db.corporations:
             entity = PoliticalEntity(
                 basicInfo=BasicInfo(
-                    name=data["in_game_name"],
+                    name=data["name"],
                     level=EntityLevel.LOCAL_BOSS,
                     partyAffiliation="NONE",
                     campAlignment=CampAlignment.INDEPENDENT,
