@@ -398,6 +398,10 @@ function doAction(cmd, label) {
     const bossId = prompt("請輸入欲策反的樁腳 ID：");
     if (!bossId) return;
     cmd = `/flip ${target} ${bossId}`;
+  } else if (cmd === "/launder") {
+    const amount = prompt("🚨 跨國地下匯兌\n請輸入要洗白的黑金金額：");
+    if (!amount || isNaN(amount)) return;
+    cmd = `/launder ${amount}`;
   }
 
   appendMsg(`〉 執行行動：[${label}]`, "system");
@@ -570,9 +574,13 @@ async function updateEconomyData() {
         <div style="font-size:20px;font-family:var(--font-headline);font-weight:900;color:var(--color-on-surface)">
           保留率 <span style="color:var(--color-tertiary)">${(data.launder_rate * 100).toFixed(1)}%</span>
         </div>
-        <div style="font-size:10px;color:var(--color-on-surface-dim);margin-top:4px">
-          檢警查緝強度影響洗錢保留率。指令：<code style="color:var(--color-primary)">/launder &lt;金額&gt;</code>
+        <div style="font-size:10px;color:var(--color-on-surface-dim);margin-top:4px;margin-bottom:12px">
+          檢警查緝強度影響洗錢保留率。
         </div>
+        <button class="btn btn-danger" onclick="doAction('/launder', '洗錢清帳')" style="padding:8px; font-size:13px;">
+          <span class="material-symbols-outlined" style="font-size:16px;">account_balance</span>
+          執行洗錢
+        </button>
       </div>`;
 
     data.stocks.forEach(s => {
