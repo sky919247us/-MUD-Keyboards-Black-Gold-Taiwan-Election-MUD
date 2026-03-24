@@ -145,3 +145,13 @@ class AsyncRepository:
                     identity=db_user.identity_data
                 )
         return None
+
+    async def delete_user(self, user_id: str) -> None:
+        """刪除玩家角色資料（支援重新選擇陣營）"""
+        async with AsyncSessionLocal() as session:
+            stmt = select(UserModel).where(UserModel.user_id == user_id)
+            result = await session.execute(stmt)
+            db_user = result.scalars().first()
+            if db_user:
+                await session.delete(db_user)
+                await session.commit()

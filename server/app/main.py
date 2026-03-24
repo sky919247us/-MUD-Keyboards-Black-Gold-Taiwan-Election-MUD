@@ -205,11 +205,12 @@ class CharacterCreateReq(BaseModel):
 
 @app.post("/api/v1/user/{userId}/create_character")
 async def createCharacter(userId: str, req: CharacterCreateReq):
-    """建立新角色"""
+    """建立新角色（若角色已存在則覆蓋，支援「重新選擇陣營」）"""
     player = await gameWorld.repo.get_user_by_id(userId)
     if player:
-        from fastapi import HTTPException
-        raise HTTPException(status_code=400, detail="Character already exists")
+        # 已存在的角色，先刪除舊資料
+        logger.info("已有角色 %s，重新建立角色", player.entityId)
+        await gameWorld.repo.delete_user(userId)
     
     try:
         newPlayer = await generateCharacter(userId, req.party_code, gameWorld.repo)

@@ -135,8 +135,8 @@ async function bindLineAndCheckCharacter(uid, name, pic) {
     if (res.ok) {
       const data = await res.json();
       if (data.entity_id) {
-        // 已有角色，直接進入遊戲
-        await enterGame(data.entity_id);
+        // 已有角色，顯示「繼續 / 重新開始」選單
+        showResumeScreen(data.entity_id);
       } else {
         // 新用戶，引導角色建立
         showCreationScreen();
@@ -149,6 +149,70 @@ async function bindLineAndCheckCharacter(uid, name, pic) {
     console.error("bind API error:", e);
     await checkCharacterData(uid);
   }
+}
+
+/**
+ * 顯示「繼續遊戲 / 重新開始」選項
+ * @param {string} existingEntityId - 已存在的角色 entityId
+ */
+function showResumeScreen(existingEntityId) {
+  console.log(">>> showResumeScreen 被呼叫了，entityId:", existingEntityId);
+  screenLoading.style.display = "none";
+  screenLoading.classList.remove("active");
+
+  // 先把角色建立畫面的內容替換為「繼續/重新開始」選單
+  screenCreation.style.display = "block";
+  screenCreation.classList.add("active");
+
+  const partyGrid = document.getElementById("party-list");
+  const createBtn = document.getElementById("btn-create-role");
+  // 隱藏原本的政黨卡片列表與建立按鈕
+  partyGrid.style.display = "none";
+  createBtn.style.display = "none";
+
+  // 動態插入「繼續/重新開始」的選項 UI
+  const resumeContainer = document.createElement("div");
+  resumeContainer.id = "resume-options";
+  resumeContainer.style.cssText = "padding: 24px 16px; text-align: center;";
+  resumeContainer.innerHTML = `
+    <div style="font-family:var(--font-headline);font-size:28px;font-weight:900;color:var(--color-primary);letter-spacing:-0.05em;text-transform:uppercase;margin-bottom:8px">
+      歡迎回來
+    </div>
+    <p style="color:var(--color-on-surface-dim);font-size:14px;margin-bottom:24px">你已經建立過角色了。要繼續上次的進度嗎？</p>
+    <button id="btn-resume" class="btn btn-primary" style="display:flex;width:100%;margin-bottom:12px" onclick="resumeGame('${existingEntityId}')">
+      <span class="material-symbols-outlined">play_arrow</span>
+      繼續上次的進度
+    </button>
+    <button id="btn-restart" class="btn" style="display:flex;width:100%;background:var(--color-surface-high);color:var(--color-tertiary);border:1px solid var(--color-tertiary)" onclick="restartCharacter()">
+      <span class="material-symbols-outlined">restart_alt</span>
+      重新選擇陣營
+    </button>
+  `;
+  screenCreation.insertBefore(resumeContainer, partyGrid);
+}
+
+/**
+ * 繼續上次的進度，直接進入遊戲
+ */
+async function resumeGame(eid) {
+  const btn = document.getElementById("btn-resume");
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = '<span class="material-symbols-outlined">hourglass_top</span> 載入中...';
+  }
+  await enterGame(eid);
+}
+
+/**
+ * 重新選擇陣營：移除「繼續/重新開始」UI，顯示政黨選擇卡片
+ */
+function restartCharacter() {
+  const resumeOptions = document.getElementById("resume-options");
+  if (resumeOptions) resumeOptions.remove();
+  // 恢復政黨卡片列表
+  document.getElementById("party-list").style.display = "";
+  // 確保按鈕隱藏直到選擇政黨
+  document.getElementById("btn-create-role").style.display = "none";
 }
 
 /**
@@ -228,10 +292,14 @@ async function createCharacter() {
  */
 async function enterGame(eid) {
   entityId = eid;
+  console.log(">>> enterGame 被呼叫，entityId:", eid);
 
-  // 切換畫面
+  // 切換畫面（使用 inline style 確保覆蓋所有先前設定）
+  screenLoading.style.display = "none";
   screenLoading.classList.remove("active");
+  screenCreation.style.display = "none";
   screenCreation.classList.remove("active");
+  screenGame.style.display = "flex";
   screenGame.classList.add("active");
   bottomNav.style.display = "flex";
   fabAction.style.display = "flex";
