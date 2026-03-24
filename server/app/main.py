@@ -230,6 +230,24 @@ async def createCharacter(userId: str, req: CharacterCreateReq):
         raise HTTPException(status_code=400, detail=str(e))
 
 
+@app.get("/api/v1/entities/{entityId}/status")
+async def getEntityStatus(entityId: str):
+    """取得政治實體的狀態摘要（幕僚個人檔案用）"""
+    entity = await gameWorld.repo.get_entity_by_id(entityId)
+    if not entity:
+        raise HTTPException(status_code=404, detail="Entity not found")
+
+    return {
+        "name": entity.basicInfo.name,
+        "party": entity.basicInfo.partyAffiliation,
+        "title": entity.basicInfo.title,
+        "fame": entity.coreAttributes.fame,
+        "favorability": entity.coreAttributes.favorability,
+        "money": entity.resources.politicalFunds,
+        "ap": entity.resources.staffAp,
+    }
+
+
 @app.get("/api/v1/entities/{entityId}/history")
 async def getEntityHistory(entityId: str):
     """取得實體歷史數據趨勢"""

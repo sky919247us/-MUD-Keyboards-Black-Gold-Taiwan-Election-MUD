@@ -18,7 +18,6 @@ const screenLoading  = document.getElementById("screen-loading");
 const screenCreation = document.getElementById("screen-creation");
 const screenGame     = document.getElementById("screen-game");
 const bottomNav      = document.getElementById("bottom-nav");
-const fabAction      = document.getElementById("fab-action");
 const output         = document.getElementById("output");
 
 // ===== PWA Service Worker 註冊 =====
@@ -302,7 +301,6 @@ async function enterGame(eid) {
   screenGame.style.display = "flex";
   screenGame.classList.add("active");
   bottomNav.style.display = "flex";
-  fabAction.style.display = "flex";
 
   // 取得 WS Token
   let token = "";
@@ -344,7 +342,6 @@ async function enterGame(eid) {
 
   ws.onclose = () => {
     appendMsg("[系統] 連線已中斷，請重新整理頁面。", "error");
-    fabAction.style.display = "none";
   };
 
   // 啟動趨勢圖輪詢
@@ -369,9 +366,6 @@ function switchTab(tab) {
   document.querySelectorAll(".nav-tab").forEach(el => {
     el.classList.toggle("active", el.dataset.tab === tab);
   });
-  document.querySelectorAll(".nav-item").forEach(el => {
-    el.classList.toggle("active", el.dataset.tab === tab);
-  });
 
   // 頁籤內容顯示
   document.querySelectorAll(".tab-pane").forEach(el => {
@@ -384,19 +378,8 @@ function switchTab(tab) {
   if (tab === "profile") updateProfileData();
 }
 
-// ===== 行動選單 Bottom Sheet =====
-
-/** 開啟行動選單 */
-function openActionSheet() {
-  document.getElementById("action-sheet").classList.add("open");
-  document.getElementById("action-backdrop").classList.add("open");
-}
-
-/** 關閉行動選單 */
-function closeActionSheet() {
-  document.getElementById("action-sheet").classList.remove("open");
-  document.getElementById("action-backdrop").classList.remove("open");
-}
+// ===== 行動按鈕列 =====
+// NOTE: 底部列直接顯示行動按鈕，無需 action-sheet 開關邏輯
 
 /**
  * 執行行動指令（從行動選單觸發）
@@ -404,7 +387,6 @@ function closeActionSheet() {
  * @param {string} label - 顯示名稱
  */
 function doAction(cmd, label) {
-  closeActionSheet();
 
   if (cmd === "/attack") {
     const target = prompt("⚔ 網軍出征\n請輸入要攻擊的對手陣營或候選人名稱：");

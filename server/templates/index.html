@@ -10,7 +10,7 @@
   <meta name="theme-color" content="#0c0e11">
   <link rel="apple-touch-icon" href="/static/icons/icon-192x192.png">
   <!-- 設計系統 CSS -->
-  <link rel="stylesheet" href="/static/css/game.css?v=4">
+  <link rel="stylesheet" href="/static/css/game.css?v=5">
   <!-- Material Symbols -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap">
   <!-- LINE LIFF SDK -->
@@ -245,63 +245,24 @@
 
 </div><!-- end #main-content -->
 
-<!-- ===== 底部導覽列（只在遊戲畫面顯示） ===== -->
+<!-- ===== 底部行動列（只在遊戲畫面顯示） ===== -->
 <nav id="bottom-nav" style="display:none">
-  <a class="nav-item active" data-tab="news" onclick="switchTab('news')">
-    <span class="material-symbols-outlined">newspaper</span>NEWS
+  <a class="nav-item" onclick="doAction('/act 召開政見發表會', '政見發表')">
+    <span class="material-symbols-outlined">campaign</span>政見發表
   </a>
-  <a class="nav-item" data-tab="market" onclick="switchTab('market')">
-    <span class="material-symbols-outlined">trending_up</span>MARKETS
+  <a class="nav-item" onclick="doAction('/act 掃街拜票行程', '掃街拜票')">
+    <span class="material-symbols-outlined">groups</span>掃街拜票
   </a>
-  <a class="nav-item" data-tab="rank" onclick="switchTab('rank')">
-    <span class="material-symbols-outlined">leaderboard</span>RANKING
+  <a class="nav-item" onclick="doAction('/attack', '輿論攻防')">
+    <span class="material-symbols-outlined">swords</span>輿論攻防
   </a>
-  <a class="nav-item" data-tab="profile" onclick="switchTab('profile')">
-    <span class="material-symbols-outlined">person_pin</span>PROFILE
+  <a class="nav-item" onclick="doAction('/act 舉辦募款餐會', '募款活動')">
+    <span class="material-symbols-outlined">payments</span>募款活動
+  </a>
+  <a class="nav-item danger" onclick="doAction('/flip', '拔樁反水')">
+    <span class="material-symbols-outlined">compare_arrows</span>拔樁反水
   </a>
 </nav>
-
-<!-- ===== 行動選單 Bottom Sheet ===== -->
-<div id="action-backdrop" onclick="closeActionSheet()"></div>
-<div id="action-sheet">
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-    <div style="font-family:var(--font-headline);font-size:12px;font-weight:700;color:var(--color-primary);text-transform:uppercase;letter-spacing:0.1em">
-      選擇行動 / Actions
-    </div>
-    <button onclick="closeActionSheet()" style="background:none;border:none;color:var(--color-on-surface-dim);cursor:pointer;font-size:20px;line-height:1">×</button>
-  </div>
-  <div class="action-grid">
-    <button class="action-btn-item" onclick="doAction('/act 召開政見發表會', '政見發表')">
-      <span class="material-symbols-outlined">campaign</span>政見發表
-    </button>
-    <button class="action-btn-item" onclick="doAction('/act 掃街拜票行程', '掃街拜票')">
-      <span class="material-symbols-outlined">groups</span>掃街拜票
-    </button>
-    <button class="action-btn-item" onclick="doAction('/attack', '輿論攻防')">
-      <span class="material-symbols-outlined">swords</span>輿論攻防
-    </button>
-    <button class="action-btn-item" onclick="doAction('/act 舉辦募款餐會', '募款活動')">
-      <span class="material-symbols-outlined">payments</span>募款活動
-    </button>
-    <button class="action-btn-item" onclick="doAction('/look', '選情分析')">
-      <span class="material-symbols-outlined">monitoring</span>選情分析
-    </button>
-    <button class="action-btn-item danger" onclick="doAction('/launder', '洗錢清帳')">
-      <span class="material-symbols-outlined">account_balance</span>洗錢清帳
-    </button>
-    <button class="action-btn-item danger" onclick="doAction('/flip', '拔樁反水')">
-      <span class="material-symbols-outlined">compare_arrows</span>拔樁反水
-    </button>
-    <button class="action-btn-item" onclick="doAction('/status', '幕僚狀態')">
-      <span class="material-symbols-outlined">badge</span>幕僚狀態
-    </button>
-  </div>
-</div>
-
-<!-- ===== 懸浮行動按鈕（FAB） ===== -->
-<button id="fab-action" onclick="openActionSheet()" style="display:none">
-  <span class="material-symbols-outlined">bolt</span>
-</button>
 
 <!-- 頁籤樣式補丁 -->
 <style>
@@ -349,7 +310,7 @@
 </style>
 
 <!-- 主程式 -->
-<script src="/static/js/game.js?v=5"></script>
+<script src="/static/js/game.js?v=6"></script>
 
 </body>
 </html>
