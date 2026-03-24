@@ -44,10 +44,9 @@ async def bind_line_account(profile: LineProfile) -> LineBindResponse:
 
     async with AsyncSessionLocal() as session:
         try:
-            # 查詢 LINE userId 是否已對應遊戲角色
-            # NOTE: 使用 entities 表的 line_user_id 欄位進行查詢
+            # 查詢 LINE userId 是否已對應遊戲角色 (從 users 玩家資料表查詢)
             result = await session.execute(
-                text("SELECT entity_id FROM entities WHERE line_user_id = :uid"),
+                text("SELECT entity_id FROM users WHERE user_id = :uid"),
                 {"uid": uid}
             )
             row = result.fetchone()
@@ -68,8 +67,7 @@ async def bind_line_account(profile: LineProfile) -> LineBindResponse:
                     display_name=profile.display_name
                 )
         except Exception as e:
-            # NOTE: 若 line_user_id 欄位不存在（舊資料庫），當作新用戶處理
-            logger.warning("line_user_id 欄位查詢失敗（可能尚未 migrate）：%s", e)
+            logger.warning("查詢 user_id 失敗：%s", e)
             return LineBindResponse(
                 entity_id=None,
                 is_new_user=True,
