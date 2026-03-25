@@ -198,6 +198,9 @@
       <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')">
         <span class="material-symbols-outlined" style="font-size:16px">person_pin</span> 幕僚
       </button>
+      <button class="nav-tab" data-tab="assets" onclick="switchTab('assets')">
+        <span class="material-symbols-outlined" style="font-size:16px">domain</span> 組織
+      </button>
     </div>
 
     <!-- 頁籤內容區（可捲動） -->
@@ -226,8 +229,15 @@
           <span class="material-symbols-outlined" style="font-size:14px;color:var(--color-primary)">emoji_events</span>
           全台聲量排行榜
         </div>
-        <div id="warroom-content" style="padding-bottom:80px">
+        <div id="warroom-content">
           <p style="color:var(--color-on-surface-dim);font-size:12px;padding:16px 0">讀取戰情資料中...</p>
+        </div>
+        <div class="section-title" style="margin-top: 24px;">
+          <span class="material-symbols-outlined" style="font-size:14px;color:var(--color-primary)">map</span>
+          六都戰情版圖
+        </div>
+        <div id="regional-map-content" style="padding-bottom:80px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+          <p style="color:var(--color-on-surface-dim);font-size:12px;grid-column: span 2;padding:16px 0">讀取版圖資料中...</p>
         </div>
       </div>
       <!-- 幕僚 Tab -->
@@ -238,6 +248,36 @@
         </div>
         <div id="profile-content" style="padding-bottom:80px">
           <p style="color:var(--color-on-surface-dim);font-size:12px;padding:16px 0">讀取幕僚資料中...</p>
+        </div>
+      </div>
+      <!-- 組織 Tab -->
+      <div class="tab-pane" id="tab-assets">
+        <div class="section-title">
+          <span class="material-symbols-outlined" style="font-size:14px;color:var(--color-primary)">account_tree</span>
+          實體化組織陣列
+        </div>
+        <div style="padding: 12px; padding-bottom:80px">
+            <!-- 樁腳區 -->
+            <div style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h3 style="margin:0; font-size:14px; color:var(--color-on-surface);">🤝 地方樁腳網路</h3>
+                    <button class="btn" style="padding:4px 8px; font-size:12px;" onclick="recruitAsset('boss')">+ 招募 ($1.0M)</button>
+                </div>
+                <div id="assets-boss-list" style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="color:var(--color-on-surface-dim); font-size:12px; text-align:center;">載入中...</div>
+                </div>
+            </div>
+
+            <!-- 網軍區 -->
+            <div>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                    <h3 style="margin:0; font-size:14px; color:var(--color-on-surface);">💻 網軍側翼帳號</h3>
+                    <button class="btn" style="padding:4px 8px; font-size:12px;" onclick="recruitAsset('army')">+ 招募 ($0.5M)</button>
+                </div>
+                <div id="assets-army-list" style="display:flex; flex-direction:column; gap:8px;">
+                    <div style="color:var(--color-on-surface-dim); font-size:12px; text-align:center;">載入中...</div>
+                </div>
+            </div>
         </div>
       </div>
     </div>

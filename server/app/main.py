@@ -248,6 +248,19 @@ async def getEntityStatus(entityId: str):
     }
 
 
+@app.get("/api/v1/entities/{entityId}/assets")
+async def getEntityAssets(entityId: str):
+    """取得政治實體的實體化組織陣列（樁腳與網軍）"""
+    entity = await gameWorld.repo.get_entity_by_id(entityId)
+    if not entity:
+        raise HTTPException(status_code=404, detail="Entity not found")
+        
+    return {
+        "bosses": [b.model_dump() for b in entity.arraysAssets.localBosses],
+        "armies": [a.model_dump() for a in entity.arraysAssets.cyberArmyAccounts]
+    }
+
+
 @app.get("/api/v1/entities/{entityId}/history")
 async def getEntityHistory(entityId: str):
     """取得實體歷史數據趨勢"""
@@ -284,32 +297,29 @@ async def getLeaderboard():
 
 @app.get("/api/v1/world/status")
 async def getWorldStatus():
-    """22 縣市勢力板圖統計"""
+    """六都勢力板圖統計"""
     from collections import defaultdict
     entities = await gameWorld.repo.get_all_entities()
     
-    # counties[縣市名稱][政黨代碼] = 總知名度
-    counties = defaultdict(lambda: defaultdict(int))
+    # regions[地區][政黨代碼] = 總區域影響力
+    regions = defaultdict(lambda: defaultdict(int))
     
     for e in entities:
-        # 如果是地方實體（縣市首長/議員），依 region 分類
-        region = e.basicInfo.region or "全國"
-        if region == "全國":
-            continue
-        
         party = e.basicInfo.partyAffiliation
-        counties[region][party] += e.fame
+        for r_code, inf in e.coreAttributes.regionalInfluence.items():
+            if inf > 0:
+                regions[r_code][party] += inf
 
-    # 格式化為前端友善格式：每個縣市最強勢的黨
     result = {}
-    for region, parties in counties.items():
+    for region, parties in regions.items():
         if not parties:
             continue
         # 找該縣市最強黨
         top_party = max(parties.items(), key=lambda x: x[1])
+        total_influence = sum(parties.values())
         result[region] = {
             "leading_party": top_party[0],
-            "total_fame": top_party[1],
+            "total_fame": total_influence,
             "all_parties": dict(parties)
         }
     

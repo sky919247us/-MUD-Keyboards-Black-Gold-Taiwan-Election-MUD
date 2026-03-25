@@ -12,7 +12,7 @@ from app.engine.combat import attemptBossFlip, launchCyberAttack
 from app.engine.penalties import checkForceActionPenalty
 from app.engine.events import get_crisis_by_id
 from app.game.world import gameWorld
-from app.models.entity import PoliticalEntity
+from app.models.entity import PoliticalEntity, LocalBoss, CyberArmyAccount, Platform
 from app.game.economy import market
 import random
 
@@ -61,6 +61,67 @@ async def _handleResolveCrisis(entity: PoliticalEntity, args: list[str]) -> str:
     return "\n".join(lines)
 
 
+def _generate_boss_name() -> str:
+    surnames = ["李", "王", "張", "陳", "林", "黃", "吳", "劉", "蔡", "楊", "高", "郭", "洪"]
+    titles = ["董", "哥", "大仔", "姊", "代表", "頭目", "主任"]
+    return random.choice(surnames) + random.choice(titles)
+
+def _generate_army_name() -> str:
+    prefixes = ["側翼", "狂人", "綠色", "藍色", "白色", "覺青", "小草", "公關", "打手"]
+    suffixes = ["粉專", "情報局", "連線", "出征軍", "戰士", "後援會", "同盟"]
+    return random.choice(prefixes) + random.choice(suffixes)
+
+async def _handleRecruitBoss(entity: PoliticalEntity, args: list[str]) -> str:
+    cost = 1_000_000
+    if entity.resources.politicalFunds < cost:
+        return f"❌ 政治獻金不足 (需要 ${cost:,})"
+    entity.resources.politicalFunds -= cost
+    new_boss = LocalBoss(name=_generate_boss_name(), mobilizationPower=500, loyalty=50)
+    entity.arraysAssets.localBosses.append(new_boss)
+    await gameWorld.repo.save_entity(entity)
+    return f"🤝 成功花費 ${cost:,} 結盟了新樁腳：{new_boss.name}"
+
+async def _handleRecruitArmy(entity: PoliticalEntity, args: list[str]) -> str:
+    cost = 500_000
+    if entity.resources.politicalFunds < cost:
+        return f"❌ 政治獻金不足 (需要 ${cost:,})"
+    entity.resources.politicalFunds -= cost
+    new_army = CyberArmyAccount(name=_generate_army_name(), outputPower=300, stealthRating=80)
+    entity.arraysAssets.cyberArmyAccounts.append(new_army)
+    await gameWorld.repo.save_entity(entity)
+    return f"💻 成功花費 ${cost:,} 建立了新網軍節點：{new_army.name}"
+
+async def _handleUpgradeBoss(entity: PoliticalEntity, args: list[str]) -> str:
+    if not args:
+        return "❌ 參數錯誤 (需提供樁腳 ID)"
+    boss_id = args[0]
+    boss = next((b for b in entity.arraysAssets.localBosses if b.bossId == boss_id), None)
+    if not boss:
+        return f"❌ 找不到該樁腳 ({boss_id})"
+    cost = boss.mobilizationPower * 100
+    if entity.resources.politicalFunds < cost:
+        return f"❌ 政治獻金不足 (需要 ${cost:,})"
+    entity.resources.politicalFunds -= cost
+    boss.mobilizationPower += 50
+    await gameWorld.repo.save_entity(entity)
+    return f"📈 成功花費 ${cost:,} 提升樁腳 {boss.name} 的動員力至 {boss.mobilizationPower}"
+
+async def _handleUpgradeArmy(entity: PoliticalEntity, args: list[str]) -> str:
+    if not args:
+        return "❌ 參數錯誤 (需提供網軍 ID)"
+    army_id = args[0]
+    army = next((a for a in entity.arraysAssets.cyberArmyAccounts if a.nodeId == army_id), None)
+    if not army:
+        return f"❌ 找不到該網軍帳號 ({army_id})"
+    cost = army.outputPower * 50
+    if entity.resources.politicalFunds < cost:
+        return f"❌ 政治獻金不足 (需要 ${cost:,})"
+    entity.resources.politicalFunds -= cost
+    army.outputPower += 50
+    await gameWorld.repo.save_entity(entity)
+    return f"🚀 成功花費 ${cost:,} 升級網軍 {army.name} 的攻擊力至 {army.outputPower}"
+
+
 async def handleCommand(entityId: str, rawInput: str) -> str:
     """
     處理玩家原始指令，回傳結果文字。
@@ -100,6 +161,14 @@ async def handleCommand(entityId: str, rawInput: str) -> str:
             return await _handleAction(entity, args)
         case "/resolve_crisis":
             return await _handleResolveCrisis(entity, args)
+        case "/recruit_boss":
+            return await _handleRecruitBoss(entity, args)
+        case "/recruit_army":
+            return await _handleRecruitArmy(entity, args)
+        case "/upgrade_boss":
+            return await _handleUpgradeBoss(entity, args)
+        case "/upgrade_army":
+            return await _handleUpgradeArmy(entity, args)
         case "/help":
             return _formatHelp()
         case _:
@@ -356,6 +425,20 @@ async def _handleAction(entity: PoliticalEntity, args: list[str]) -> str:
     lines.append(f"[結算] 好感度 {changes.get('favorability', 0):+d}，"
                  f"仇恨值 {changes.get('aggro', 0):+d}，"
                  f"知名度 {changes.get('fame', 0):+d}")
+                 
+    # 判斷區域關鍵字並增加區域影響力
+    regions = {
+        "台北": "TPE", "新北": "NWT", "桃園": "TAO", 
+        "台中": "TXG", "台南": "TNN", "高雄": "KHH"
+    }
+    for r_name, r_code in regions.items():
+        if r_name in actionDesc:
+            # 以好感度加知名度之和作為區域影響力，基礎保底為0
+            influence_gain = max(0, changes.get("fame", 0) + changes.get("favorability", 0))
+            if influence_gain > 0:
+                entity.coreAttributes.regionalInfluence[r_code] += influence_gain
+                lines.append(f"[地盤] {r_name} ({r_code}) 區影響力 +{influence_gain}")
+            break # 單次行動只發配一個主要縣市
                  
     if not isDisaster and forceActionWarning:
         lines.append("")

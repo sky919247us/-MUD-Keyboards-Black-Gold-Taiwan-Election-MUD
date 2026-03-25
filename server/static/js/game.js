@@ -383,6 +383,7 @@ function switchTab(tab) {
   if (tab === "rank")    updateRankData();
   if (tab === "market")  updateEconomyData();
   if (tab === "profile") updateProfileData();
+  if (tab === "assets")  updateAssetsData();
 }
 
 // ===== 行動按鈕列 =====
@@ -601,31 +602,77 @@ async function updateTrendingChart(eid) {
 
 // ===== 排行榜資料 =====
 
-/** 更新全台排行榜 */
+/** 更新全台排行榜與六都版圖 */
 async function updateRankData() {
   const content = document.getElementById("warroom-content");
-  if (!content) return;
-  content.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;padding:12px 0">同步衛星數據中...</p>`;
+  const mapContent = document.getElementById("regional-map-content");
 
-  try {
-    const res = await fetch("/api/v1/leaderboard");
-    const data = await res.json();
-    let html = "";
-    data.forEach((e, i) => {
-      html += `
-        <div class="rank-row">
-          <div style="width:28px;color:var(--color-on-surface-dim);font-family:var(--font-headline);font-size:11px;font-weight:700">#${i + 1}</div>
-          <div style="flex:1">
-            <span class="rank-badge badge-${e.party}">${e.party}</span>
-            <span style="font-weight:700;font-size:13px">${e.name}</span>
-            <span style="font-size:10px;color:var(--color-on-surface-dim)"> | ${e.title || ""}</span>
-          </div>
-          <div style="color:var(--color-primary);font-family:var(--font-headline);font-weight:700;font-size:13px">${(e.fame || 0).toLocaleString()}</div>
-        </div>`;
-    });
-    content.innerHTML = html || `<p style="color:var(--color-on-surface-dim);font-size:12px;padding:12px 0">尚無排行資料</p>`;
-  } catch (e) {
-    content.innerHTML = `<p style="color:var(--color-tertiary);font-size:12px;padding:12px 0">⚠ 通訊中斷，無法取得選情資訊。</p>`;
+  if (content) {
+    content.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;padding:12px 0">同步衛星數據中...</p>`;
+    try {
+      const res = await fetch("/api/v1/leaderboard");
+      const data = await res.json();
+      let html = "";
+      data.forEach((e, i) => {
+        html += `
+          <div class="rank-row">
+            <div style="width:28px;color:var(--color-on-surface-dim);font-family:var(--font-headline);font-size:11px;font-weight:700">#${i + 1}</div>
+            <div style="flex:1">
+              <span class="rank-badge badge-${e.party}">${e.party}</span>
+              <span style="font-weight:700;font-size:13px">${e.name}</span>
+              <span style="font-size:10px;color:var(--color-on-surface-dim)"> | ${e.title || ""}</span>
+            </div>
+            <div style="color:var(--color-primary);font-family:var(--font-headline);font-weight:700;font-size:13px">${(e.fame || 0).toLocaleString()}</div>
+          </div>`;
+      });
+      content.innerHTML = html || `<p style="color:var(--color-on-surface-dim);font-size:12px;padding:12px 0">尚無排行資料</p>`;
+    } catch (e) {
+      content.innerHTML = `<p style="color:var(--color-tertiary);font-size:12px;padding:12px 0">⚠ 通訊中斷，無法取得選情資訊。</p>`;
+    }
+  }
+
+  if (mapContent) {
+    try {
+      const resMap = await fetch("/api/v1/world/status");
+      const mapData = await resMap.json();
+      let mapHtml = "";
+      
+      const regionNames = {
+        "TPE": "台北市", "NWT": "新北市", "TAO": "桃園市",
+        "TXG": "台中市", "TNN": "台南市", "KHH": "高雄市"
+      };
+
+      for (const [r_code, r_name] of Object.entries(regionNames)) {
+        const info = mapData[r_code];
+        if (!info) {
+          mapHtml += `
+            <div class="card" style="padding: 12px;">
+              <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">${r_name}</div>
+              <div style="font-size: 11px; color: var(--color-on-surface-dim);">無勢力進駐</div>
+            </div>`;
+        } else {
+          const leadingParty = info.leading_party;
+          const totalInfo = info.total_fame || 1; 
+          const leadingFame = info.all_parties[leadingParty] || 0;
+          const pct = Math.round((leadingFame / totalInfo) * 100);
+          
+          mapHtml += `
+            <div class="card" style="padding: 12px; border-left: 4px solid var(--color-primary);">
+              <div style="font-weight: 700; font-size: 13px; margin-bottom: 4px;">${r_name}</div>
+              <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px;">
+                <span class="rank-badge badge-${leadingParty}">${leadingParty} 領先</span>
+                <span style="font-weight: 700; color: var(--color-on-surface);">${pct}% 控制率</span>
+              </div>
+              <div style="margin-top: 8px; height: 6px; background: rgba(255, 255, 255, 0.05); border-radius: 3px; overflow: hidden;">
+                <div style="height: 100%; width: ${pct}%; background: var(--color-primary);"></div>
+              </div>
+            </div>`;
+        }
+      }
+      mapContent.innerHTML = mapHtml;
+    } catch (e) {
+      mapContent.innerHTML = `<p style="color:var(--color-tertiary);font-size:12px;grid-column: span 2;padding:12px 0">⚠ 無法取得戰情版圖。</p>`;
+    }
   }
 }
 
@@ -723,6 +770,90 @@ async function updateProfileData() {
       </div>`;
   } catch (e) {
     content.innerHTML = `<p style="color:var(--color-tertiary);font-size:12px;padding:12px 0">⚠ 讀取幕僚資料失敗。</p>`;
+  }
+}
+
+// ===== 組織資產 =====
+
+/** 招募組織資產 */
+function recruitAsset(type) {
+    if (type === "boss") {
+        sendCommand("/recruit_boss");
+    } else if (type === "army") {
+        sendCommand("/recruit_army");
+    }
+}
+
+/** 升級組織資產 */
+function upgradeAsset(type, id) {
+    if (type === "boss") {
+        sendCommand(`/upgrade_boss ${id}`);
+    } else if (type === "army") {
+        sendCommand(`/upgrade_army ${id}`);
+    }
+}
+
+/** 更新組織資產頁面 */
+async function updateAssetsData() {
+  if (!entityId) return;
+  const bossList = document.getElementById("assets-boss-list");
+  const armyList = document.getElementById("assets-army-list");
+  if (!bossList || !armyList) return;
+
+  try {
+    const res = await fetch(`/api/v1/entities/${entityId}/assets`);
+    if (!res.ok) {
+        bossList.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;">讀取失敗</p>`;
+        armyList.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;">讀取失敗</p>`;
+        return;
+    }
+    const data = await res.json();
+    
+    // 渲染樁腳
+    if (data.bosses && data.bosses.length > 0) {
+        bossList.innerHTML = data.bosses.map((b, i) => {
+            let cost = b.mobilizationPower * 100;
+            let costText = cost >= 1000000 ? `${(cost/1000000).toFixed(1)}M` : `${(cost/1000).toFixed(1)}k`;
+            return `
+            <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:bold; font-size:14px;">${b.name}</div>
+                    <div style="font-size:10px; color:var(--color-on-surface-dim)">動員力: <span style="color:var(--color-primary)">${b.mobilizationPower}</span> | 忠誠度: ${b.loyalty} | 區域: ${b.regionCode}</div>
+                </div>
+                <button class="btn btn-primary" style="padding:6px; font-size:11px;" onclick="upgradeAsset('boss', '${b.bossId}')">
+                    升級 ($${costText})
+                </button>
+            </div>
+            `;
+        }).join("");
+    } else {
+        bossList.innerHTML = `<div style="color:var(--color-on-surface-dim); font-size:12px; text-align:center;">尚無任何樁腳，快去灑幣結盟吧！</div>`;
+    }
+
+    // 渲染網軍
+    if (data.armies && data.armies.length > 0) {
+        armyList.innerHTML = data.armies.map((a, i) => {
+            let cost = a.outputPower * 50;
+            let costText = cost >= 1000000 ? `${(cost/1000000).toFixed(1)}M` : `${(cost/1000).toFixed(1)}k`;
+            return `
+            <div class="card card-secondary" style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <div style="font-weight:bold; font-size:14px; color:var(--color-secondary)">${a.name}</div>
+                    <div style="font-size:10px; color:var(--color-on-surface-dim)">攻擊力: <span style="color:var(--color-secondary)">${a.outputPower}</span> | 隱蔽度: ${a.stealthRating} | 平台: ${a.platform}</div>
+                </div>
+                <button class="btn" style="padding:6px; font-size:11px; background:var(--color-secondary); border-color:var(--color-secondary); color:#000" onclick="upgradeAsset('army', '${a.nodeId}')">
+                    擴編 ($${costText})
+                </button>
+            </div>
+            `;
+        }).join("");
+    } else {
+        armyList.innerHTML = `<div style="color:var(--color-on-surface-dim); font-size:12px; text-align:center;">尚無任何網軍節點，需要火力支援嗎？</div>`;
+    }
+
+  } catch (e) {
+    bossList.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;">連線失敗</p>`;
+    armyList.innerHTML = `<p style="color:var(--color-on-surface-dim);font-size:12px;">連線失敗</p>`;
   }
 }
 

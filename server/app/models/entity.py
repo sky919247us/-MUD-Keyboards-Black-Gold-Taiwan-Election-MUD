@@ -51,7 +51,8 @@ class MediaAlignmentType(StrEnum):
 class LocalBoss(BaseModel):
     """地方樁腳節點"""
     bossId: str = Field(default_factory=lambda: f"boss_{uuid.uuid4().hex[:8]}")
-    regionCode: str = Field(..., description="管轄行政區代碼，如 TPE-DA")
+    name: str = Field(default="地方角頭", description="樁腳稱呼")
+    regionCode: str = Field(default="TPE", description="管轄行政區代碼，如 TPE-DA")
     mobilizationPower: int = Field(default=500, ge=0, description="動員力")
     loyalty: int = Field(default=50, ge=0, le=100, description="忠誠度")
 
@@ -59,6 +60,7 @@ class LocalBoss(BaseModel):
 class CyberArmyAccount(BaseModel):
     """網軍側翼帳號節點"""
     nodeId: str = Field(default_factory=lambda: f"army_{uuid.uuid4().hex[:8]}")
+    name: str = Field(default="匿名帳號", description="帳號暱稱")
     platform: Platform = Platform.PTT
     stealthRating: int = Field(default=80, ge=0, le=100, description="隱蔽度")
     outputPower: int = Field(default=300, ge=0, description="聲量製造力")
@@ -94,6 +96,12 @@ class CoreAttributes(BaseModel):
     fame: int = Field(default=1000, ge=0, le=10000)
     favorability: int = Field(default=500, ge=-10000, le=10000)
     aggro: int = Field(default=0, ge=0, le=10000)
+    regionalInfluence: dict[str, int] = Field(
+        default_factory=lambda: {
+            "TPE": 50, "NWT": 50, "TAO": 50, "TXG": 50, "TNN": 50, "KHH": 50
+        },
+        description="六都區域聲量/影響力"
+    )
 
 
 class Resources(BaseModel):
