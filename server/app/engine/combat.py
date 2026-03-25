@@ -20,7 +20,7 @@ def attemptBossFlip(
     targetBossId: str,
     apCost: int = 20,
     fundsCost: int = 500_000,
-) -> tuple[bool, str]:
+) -> tuple[bool, str | dict]:
     """
     拔樁行動（Local Boss Flipping）
     判定公式：成功率 = (投入獻金 / 100萬) × (100 - 樁腳忠誠度) / 100
@@ -58,15 +58,20 @@ def attemptBossFlip(
         # 以低忠誠度加入攻擊方
         targetBoss.loyalty = 30
         attacker.arraysAssets.localBosses.append(targetBoss)
-        msg = (
-            f"【拔樁成功】{attacker.name} 成功策反 {defender.name} 的樁腳 "
-            f"（區域 {targetBoss.regionCode}，動員力 {targetBoss.mobilizationPower}）"
-        )
-        logger.info(msg)
-        return True, msg
+        return True, {
+            "attacker": attacker.name,
+            "defender": defender.name,
+            "boss_region": targetBoss.regionCode,
+            "mobilization_power": targetBoss.mobilizationPower,
+        }
     else:
-        msg = f"【拔樁失敗】{attacker.name} 嘗試拔樁失敗（成功率 {successRate:.1%}，擲骰 {roll:.2f}）"
-        return False, msg
+        return False, {
+            "attacker": attacker.name,
+            "defender": defender.name,
+            "boss_region": targetBoss.regionCode,
+            "success_rate": successRate,
+            "is_narrative_fail": True, # 標記這是敘事上的失敗，而非系統錯誤
+        }
 
 
 def launchCyberAttack(
@@ -75,7 +80,7 @@ def launchCyberAttack(
     platform: str = "PTT",
     apCost: int = 15,
     fundsCost: int = 200_000,
-) -> tuple[bool, str]:
+) -> tuple[bool, str | dict]:
     """
     網軍側翼抹黑攻擊
     攻擊者的 output_power 對決防守者的自媒體防禦裝甲。
@@ -122,16 +127,21 @@ def launchCyberAttack(
 
     # 檢查是否有帳號隱蔽度歸零（翻車風險）
     bustedNodes = [n for n in attackNodes if n.stealthRating == 0]
-    bustedMsg = ""
-    if bustedNodes:
-        bustedMsg = f"；⚠ {len(bustedNodes)} 個帳號隱蔽度歸零，面臨「被抓包」風險！"
+    is_busted = len(bustedNodes) > 0
+    if is_busted:
         # 反噬：攻擊方好感度下降，防守方獲得悲情牌加成
         attacker.applyAttributeChange(favorability=-300)
         defender.applyAttributeChange(favorability=200, fame=100)
 
-    msg = (
-        f"【網軍攻擊】{attacker.name} 在 {platform} 發動側翼攻擊 → "
-        f"{defender.name} 好感度 -{favDamage}，仇恨值 +{aggroDamage}"
-        f"{bustedMsg}"
-    )
-    return True, msg
+    kwargs = {
+        "attacker": attacker.name,
+        "defender": defender.name,
+        "favDamage": favDamage,
+        "aggroDamage": aggroDamage,
+        "busted": is_busted,
+        "busted_count": len(bustedNodes),
+        "shield_absorbed": defenseArmor > 0,
+    }
+    
+    # 全部當作 True，但在外層用 busted 判定是 success 還是 fail
+    return True, kwargs

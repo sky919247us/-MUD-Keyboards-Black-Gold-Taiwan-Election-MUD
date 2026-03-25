@@ -13,6 +13,7 @@ from typing import Any
 
 from pydantic import BaseModel, Field
 from app.config import settings
+from app.data.narratives import get_news_and_ptt
 
 logger = logging.getLogger(__name__)
 
@@ -162,7 +163,7 @@ def _mockSettle(
     playerAction: str,
 ) -> dict[str, Any]:
     """
-    Mock 結算引擎：產生合理的模擬結果，用於開發與測試。
+    Mock 結算引擎：產生合理的模擬結果，並接上靜態文本庫。
     """
     name = playerState.get("basicInfo", {}).get("name", "某候選人")
 
@@ -181,17 +182,12 @@ def _mockSettle(
         favChange -= 500
         aggroChange += 500
 
+    event_type = "general_positive" if isPositive else "general_negative"
+    mock_texts = get_news_and_ptt(event_type, {"name": name, "action": playerAction[:15]})
+
     result = {
-        "news_report": (
-            f"〔Mock 結算〕為您插播最新選情！{name}今日{playerAction[:20]}..."
-            f"引發各界議論。政治評論員認為此舉{'大膽但有風險' if isDangerous else '值得肯定'}，"
-            f"對手陣營發言人則痛批其不知民間疾苦。"
-        ),
-        "ptt_comments": [
-            f"{'噓' if isAggressive else '推'}: 這咖又在{'作秀' if isAggressive else '認真做事'}了",
-            f"{'推' if isPositive else '噓'}: {'選舉到了才來' if not isPositive else '值得鼓勵給推'}",
-            "→: 吃瓜看戲中，坐等後續發展",
-        ],
+        "news_report": mock_texts["news_report"],
+        "ptt_comments": mock_texts["ptt_comments"],
         "state_changes": {
             "favorability": favChange,
             "aggro": aggroChange,
@@ -202,6 +198,58 @@ def _mockSettle(
         },
     }
     return result
+
+
+# ── 針對戰鬥與指令產生的動態/靜態結合引擎 ──────────────────────────
+class CombatNarrativeResult(BaseModel):
+    news_report: str = Field(description="100字內新聞快訊")
+    ptt_comments: list[str] = Field(description="包含推噓的3-4則PTT推文模擬")
+
+async def generateCombatNarrative(
+    action_type: str,
+    kwargs: dict[str, Any]
+) -> dict[str, Any]:
+    """
+    產生戰鬥與拔樁的動態敘事結果。
+    如果開啟 AI 且有連線則呼叫 LLM 產生；否則退回使用靜態的 narratives.py
+    action_type 對應 narratives.py 常數：'attack_success', 'attack_fail', 'flip_success', 'flip_fail'
+    """
+    if settings.AI_PROVIDER == "gemini" and settings.GEMINI_API_KEY:
+        try:
+            from google import genai
+            from google.genai import types
+
+            global _gemini_client
+            if _gemini_client is None:
+                _gemini_client = genai.Client(api_key=settings.GEMINI_API_KEY)
+            
+            prompt = (
+                f"【事件類型】：{action_type}\n"
+                f"【變數參數】：{json.dumps(kwargs, ensure_ascii=False)}\n"
+                "請根據這些參數寫出這場選戰事件的新聞報導與 3 則 PTT 鄉民回覆。\n"
+                "如果是拔樁(flip)請強調地方政治、基層動員。如果是網軍攻擊(attack)請強調網路聲量、側翼、爆卦。"
+            )
+
+            async def _call():
+                return await _gemini_client.aio.models.generate_content(
+                    model='gemini-2.5-flash',
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        system_instruction="你是一個專門寫聳動政治新聞與模擬台灣PTT酸民的AI結算引擎。",
+                        response_mime_type="application/json",
+                        response_schema=CombatNarrativeResult,
+                        temperature=0.8,
+                    ),
+                )
+
+            # 5 秒超時，超時就用靜態庫
+            response = await asyncio.wait_for(_call(), timeout=5.0)
+            return json.loads(response.text)
+        except Exception as e:
+            logger.error(f"[CombatNarrative] AI 失效，轉為靜態語料：{e}")
+
+    # Fallback to static mock database
+    return get_news_and_ptt(action_type, kwargs)
 
 
 # ── 全服新聞快訊 Schema ──────────────────────────────────────

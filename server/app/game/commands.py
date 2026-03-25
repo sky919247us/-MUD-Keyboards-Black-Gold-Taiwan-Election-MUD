@@ -7,7 +7,7 @@ from __future__ import annotations
 import logging
 from typing import Any
 
-from app.ai.settlement_engine import settleAction
+from app.ai.settlement_engine import settleAction, generateCombatNarrative
 from app.engine.combat import attemptBossFlip, launchCyberAttack
 from app.engine.penalties import checkForceActionPenalty
 from app.game.world import gameWorld
@@ -150,14 +150,25 @@ async def _handleAttack(entity: PoliticalEntity, args: list[str]) -> str:
     if target is None:
         return f"❌ 找不到名為「{targetName}」的候選人"
 
-    success, msg = launchCyberAttack(entity, target)
+    success, result_data = launchCyberAttack(entity, target)
+    
+    # 型別為字串代表系統阻擋（費用不足等）
+    if isinstance(result_data, str):
+        return result_data
+
+    # 型別為字典代表戰鬥已執行，取得參數
+    kwargs = result_data
     
     # 儲存雙方狀態
     await gameWorld.repo.save_entity(entity)
     await gameWorld.repo.save_entity(target)
 
-    # 觸發全服播報 (Phase 7.2) - 這裡暫定只要成功攻擊且對對手有影響就播報 (或可加入亂數)
-    if success and random.random() < 0.3:
+    # 決定事件類型並呼叫敘事引擎
+    event_type = "attack_fail" if kwargs.get("busted") else "attack_success"
+    narrative = await generateCombatNarrative(event_type, kwargs)
+
+    # 全服廣播判定
+    if success and not kwargs.get("busted") and random.random() < 0.3:
         import asyncio
         asyncio.create_task(gameWorld.trigger_news_flash(
             attacker_name=entity.name,
@@ -166,7 +177,18 @@ async def _handleAttack(entity: PoliticalEntity, args: list[str]) -> str:
             damage_desc="網路聲量大幅動盪"
         ))
     
-    return msg
+    # 格式化輸出
+    lines = [
+        "📺 " + narrative.get("news_report", ""),
+        "",
+        "── PTT 鄉民反應 ──",
+    ]
+    for comment in narrative.get("ptt_comments", []):
+        lines.append(f"  {comment}")
+    lines.append("")
+    lines.append(f"[結算] 對方好感度 -{kwargs.get('favDamage', 0)}，仇恨值 +{kwargs.get('aggroDamage', 0)}")
+
+    return "\n".join(lines)
 
 
 async def _handleFlip(entity: PoliticalEntity, args: list[str]) -> str:
@@ -180,11 +202,19 @@ async def _handleFlip(entity: PoliticalEntity, args: list[str]) -> str:
     if target is None:
         return f"❌ 找不到名為「{targetName}」的候選人"
 
-    success, msg = attemptBossFlip(entity, target, bossId)
+    success, result_data = attemptBossFlip(entity, target, bossId)
+    
+    if isinstance(result_data, str):
+        return result_data
+
+    kwargs = result_data
     
     # 儲存雙方狀態
     await gameWorld.repo.save_entity(entity)
     await gameWorld.repo.save_entity(target)
+    
+    event_type = "flip_fail" if kwargs.get("is_narrative_fail") else "flip_success"
+    narrative = await generateCombatNarrative(event_type, kwargs)
 
     # 拔樁成功必上新聞
     if success:
@@ -196,7 +226,21 @@ async def _handleFlip(entity: PoliticalEntity, args: list[str]) -> str:
             damage_desc="地方基層勢力遭遇大洗牌"
         ))
 
-    return msg
+    # 格式化輸出
+    lines = [
+        "📺 " + narrative.get("news_report", ""),
+        "",
+        "── PTT 鄉民反應 ──",
+    ]
+    for comment in narrative.get("ptt_comments", []):
+        lines.append(f"  {comment}")
+    lines.append("")
+    if success:
+        lines.append(f"[結算] 成功策反區域 {kwargs.get('boss_region')}，動員力 +{kwargs.get('mobilization_power')}")
+    else:
+        lines.append(f"[結算] 拔樁失敗 (成功率 {kwargs.get('success_rate', 0):.1%})")
+
+    return "\n".join(lines)
 
 
 async def _handleAction(entity: PoliticalEntity, args: list[str]) -> str:
