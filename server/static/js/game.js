@@ -384,10 +384,11 @@ function switchTab(tab) {
   if (tab === "market")  updateEconomyData();
   if (tab === "profile") updateProfileData();
   if (tab === "assets")  updateAssetsData();
-  // 切回選情時自動捲到最新訊息（等待 DOM 渲染完成）
+  // 切回選情時自動捲到最新訊息（多重保險）
   if (tab === "news" && output) {
-    requestAnimationFrame(() => {
-      setTimeout(() => { output.scrollTop = output.scrollHeight; }, 100);
+    // 連續多次嘗試捲動，確保 display:block 後高度已計算完畢
+    [0, 50, 150, 300].forEach(delay => {
+      setTimeout(() => { output.scrollTop = output.scrollHeight; }, delay);
     });
   }
 }
@@ -839,6 +840,17 @@ function upgradeAsset(type, id) {
     setTimeout(() => updateAssetsData(), 1500);
 }
 
+/** 裁撤組織資產 */
+function fireAsset(type, id) {
+    if (!confirm(`確定要裁撤此${type === 'boss' ? '樁腳' : '網軍'}嗎？此操作不可復原！`)) return;
+    if (type === "boss") {
+        sendCommand(`/fire_boss ${id}`, true);
+    } else if (type === "army") {
+        sendCommand(`/fire_army ${id}`, true);
+    }
+    setTimeout(() => updateAssetsData(), 1500);
+}
+
 /** 更新組織資產頁面 */
 async function updateAssetsData() {
   if (!entityId) return;
@@ -862,13 +874,14 @@ async function updateAssetsData() {
             let costText = cost >= 1000000 ? `${(cost/1000000).toFixed(1)}M` : `${(cost/1000).toFixed(1)}k`;
             return `
             <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
+                <div style="flex:1;min-width:0">
                     <div style="font-weight:bold; font-size:14px;">${b.name}</div>
-                    <div style="font-size:10px; color:var(--color-on-surface-dim)">動員力: <span style="color:var(--color-primary)">${b.mobilizationPower}</span> | 忠誠度: ${b.loyalty} | 區域: ${b.regionCode}</div>
+                    <div style="font-size:10px; color:var(--color-on-surface-dim)">動員力: <span style="color:var(--color-primary)">${b.mobilizationPower}</span> | 忠誠: ${b.loyalty} | 維護: $50k/T</div>
                 </div>
-                <button class="btn btn-primary" style="padding:6px; font-size:11px;" onclick="upgradeAsset('boss', '${b.bossId}')">
-                    升級 ($${costText})
-                </button>
+                <div style="display:flex;gap:4px;flex-shrink:0">
+                  <button class="btn btn-primary" style="padding:4px 6px; font-size:10px;" onclick="upgradeAsset('boss', '${b.bossId}')">升級$${costText}</button>
+                  <button class="btn" style="padding:4px 6px; font-size:10px; background:#d32f2f; border-color:#d32f2f; color:#fff" onclick="fireAsset('boss', '${b.bossId}')">🔥裁</button>
+                </div>
             </div>
             `;
         }).join("");
@@ -883,13 +896,14 @@ async function updateAssetsData() {
             let costText = cost >= 1000000 ? `${(cost/1000000).toFixed(1)}M` : `${(cost/1000).toFixed(1)}k`;
             return `
             <div class="card card-secondary" style="display:flex; justify-content:space-between; align-items:center;">
-                <div>
+                <div style="flex:1;min-width:0">
                     <div style="font-weight:bold; font-size:14px; color:var(--color-secondary)">${a.name}</div>
-                    <div style="font-size:10px; color:var(--color-on-surface-dim)">攻擊力: <span style="color:var(--color-secondary)">${a.outputPower}</span> | 隱蔽度: ${a.stealthRating} | 平台: ${a.platform}</div>
+                    <div style="font-size:10px; color:var(--color-on-surface-dim)">攻擊力: <span style="color:var(--color-secondary)">${a.outputPower}</span> | 隱蔽: ${a.stealthRating} | 維護: $30k/T</div>
                 </div>
-                <button class="btn" style="padding:6px; font-size:11px; background:var(--color-secondary); border-color:var(--color-secondary); color:#000" onclick="upgradeAsset('army', '${a.nodeId}')">
-                    擴編 ($${costText})
-                </button>
+                <div style="display:flex;gap:4px;flex-shrink:0">
+                  <button class="btn" style="padding:4px 6px; font-size:10px; background:var(--color-secondary); border-color:var(--color-secondary); color:#000" onclick="upgradeAsset('army', '${a.nodeId}')">擴編$${costText}</button>
+                  <button class="btn" style="padding:4px 6px; font-size:10px; background:#d32f2f; border-color:#d32f2f; color:#fff" onclick="fireAsset('army', '${a.nodeId}')">🔥裁</button>
+                </div>
             </div>
             `;
         }).join("");

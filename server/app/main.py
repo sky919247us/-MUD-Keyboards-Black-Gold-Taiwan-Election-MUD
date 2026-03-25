@@ -105,6 +105,29 @@ async def tickJob() -> None:
             aggro=ent.coreAttributes.aggro,
         )
 
+    # ── 組織維護費扣除 ──────────────────────────────────────
+    BOSS_MAINTENANCE = 50_000   # 每個樁腳每 Tick 維護費
+    ARMY_MAINTENANCE = 30_000   # 每個網軍每 Tick 維護費
+    for ent in entities:
+        boss_cost = len(ent.arraysAssets.localBosses) * BOSS_MAINTENANCE
+        army_cost = len(ent.arraysAssets.cyberArmyAccounts) * ARMY_MAINTENANCE
+        total_cost = boss_cost + army_cost
+        if total_cost > 0:
+            ent.resources.politicalFunds -= total_cost
+            # 資金不足時自動裁撤最弱單位
+            while ent.resources.politicalFunds < 0 and ent.arraysAssets.localBosses:
+                weakest = min(ent.arraysAssets.localBosses, key=lambda b: b.mobilizationPower)
+                ent.arraysAssets.localBosses.remove(weakest)
+                ent.resources.politicalFunds += BOSS_MAINTENANCE
+                logger.info(f"[維護費] {ent.name} 因資金不足自動裁撤樁腳 {weakest.name}")
+            while ent.resources.politicalFunds < 0 and ent.arraysAssets.cyberArmyAccounts:
+                weakest = min(ent.arraysAssets.cyberArmyAccounts, key=lambda a: a.outputPower)
+                ent.arraysAssets.cyberArmyAccounts.remove(weakest)
+                ent.resources.politicalFunds += ARMY_MAINTENANCE
+                logger.info(f"[維護費] {ent.name} 因資金不足自動裁撤網軍 {weakest.name}")
+    # 批次儲存維護費扣除結果
+    await gameWorld.repo.batch_save_entities(entities)
+
     # 使用包含新聞的非同步 Tick
     events = await executeTickAsync(entities)
 
@@ -439,11 +462,8 @@ async def websocketEndpoint(websocket: WebSocket, entityId: str):
                     )
                     continue
             
-            # 支援 PWA 介面的選單快捷按鈕邏輯
-            if text.startswith("/act "):
-                response = await handleMenuAction(entity, text)
-            else:
-                response = await handleCommand(entityId, text)
+            # 統一走 handleCommand 路徑，確保每次都從 DB 載入最新 entity
+            response = await handleCommand(entityId, text)
 
             # 記錄指令冷卻
             if cmd_name:

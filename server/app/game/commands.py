@@ -121,6 +121,31 @@ async def _handleUpgradeArmy(entity: PoliticalEntity, args: list[str]) -> str:
     await gameWorld.repo.save_entity(entity)
     return f"🚀 成功花費 ${cost:,} 升級網軍 {army.name} 的攻擊力至 {army.outputPower}"
 
+async def _handleFireBoss(entity: PoliticalEntity, args: list[str]) -> str:
+    """裁撤樁腳"""
+    if not args:
+        return "❌ 參數錯誤 (需提供樁腳 ID)"
+    boss_id = args[0]
+    boss = next((b for b in entity.arraysAssets.localBosses if b.bossId == boss_id), None)
+    if not boss:
+        return f"❌ 找不到該樁腳 ({boss_id})"
+    boss_name = boss.name
+    entity.arraysAssets.localBosses.remove(boss)
+    await gameWorld.repo.save_entity(entity)
+    return f"🔥 已裁撤樁腳：{boss_name}，每 Tick 節省維護費 $50,000"
+
+async def _handleFireArmy(entity: PoliticalEntity, args: list[str]) -> str:
+    """裁撤網軍"""
+    if not args:
+        return "❌ 參數錯誤 (需提供網軍 ID)"
+    army_id = args[0]
+    army = next((a for a in entity.arraysAssets.cyberArmyAccounts if a.nodeId == army_id), None)
+    if not army:
+        return f"❌ 找不到該網軍帳號 ({army_id})"
+    army_name = army.name
+    entity.arraysAssets.cyberArmyAccounts.remove(army)
+    await gameWorld.repo.save_entity(entity)
+    return f"🔥 已裁撤網軍節點：{army_name}，每 Tick 節省維護費 $30,000"
 
 async def handleCommand(entityId: str, rawInput: str) -> str:
     """
@@ -169,6 +194,10 @@ async def handleCommand(entityId: str, rawInput: str) -> str:
             return await _handleUpgradeBoss(entity, args)
         case "/upgrade_army":
             return await _handleUpgradeArmy(entity, args)
+        case "/fire_boss":
+            return await _handleFireBoss(entity, args)
+        case "/fire_army":
+            return await _handleFireArmy(entity, args)
         case "/help":
             return _formatHelp()
         case _:
