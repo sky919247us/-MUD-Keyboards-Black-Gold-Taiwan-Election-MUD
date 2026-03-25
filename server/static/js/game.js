@@ -386,9 +386,10 @@ function switchTab(tab) {
   if (tab === "assets")  updateAssetsData();
   // 切回選情時自動捲到最新訊息（多重保險）
   if (tab === "news" && output) {
+    const scrollContainer = document.getElementById("tab-content") || document.scrollingElement || document.documentElement;
     // 連續多次嘗試捲動，確保 display:block 後高度已計算完畢
     [0, 50, 150, 300].forEach(delay => {
-      setTimeout(() => { output.scrollTop = output.scrollHeight; }, delay);
+      setTimeout(() => { scrollContainer.scrollTop = scrollContainer.scrollHeight; }, delay);
     });
   }
 }
@@ -472,7 +473,8 @@ function appendMsg(text, cls) {
 
   // 捲動到最新訊息
   setTimeout(() => {
-    output.scrollTop = output.scrollHeight;
+    const scrollContainer = document.getElementById("tab-content") || document.scrollingElement || document.documentElement;
+    scrollContainer.scrollTop = scrollContainer.scrollHeight;
   }, 50);
 }
 
