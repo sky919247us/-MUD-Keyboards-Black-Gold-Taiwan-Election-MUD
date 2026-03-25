@@ -115,8 +115,8 @@ class Resources(BaseModel):
         description="非法政治獻金（待洗白的黑金）",
     )
     staffAp: int = Field(
-        default=100, ge=0, le=100,
-        description="幕僚行動力",
+        default=100, ge=-200, le=100,
+        description="幕僚行動力（允許透支至負數）",
     )
     stockPortfolio: dict[str, int] = Field(
         default_factory=dict,
