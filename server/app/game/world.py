@@ -6,8 +6,9 @@ from __future__ import annotations
 
 import logging
 from collections import deque
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import StrEnum
+from typing import Any
 
 from pydantic import BaseModel
 from app.models.entity import (
@@ -17,6 +18,8 @@ from app.models.entity import (
 from app.repository.async_repo import AsyncRepository
 from app.data.npc_db import npc_db
 from app.game.economy import market
+from app.repositories.player_repo import PlayerRepository
+from app.engine.events import get_random_crisis
 
 logger = logging.getLogger(__name__)
 
@@ -72,6 +75,8 @@ class GameWorld:
         self.tickCount: int = 0
         self.currentPhase: SeasonPhase = SeasonPhase.WARMUP
         self._initialized = False
+        self._connections: dict[str, Any] = {} # Store active WebSocket connections by entity_id
+        self._send_to_entity_callback = None # Callback to send messages to specific entities
 
     async def initialize(self) -> None:
         """初始化遊戲世界，將所有真實政治實體與企業匯入資料庫"""
@@ -141,6 +146,47 @@ class GameWorld:
     def set_broadcast_callback(self, callback) -> None:
         """注入廣播回呼函式（由 main.py 的 ConnectionManager 提供）"""
         self._broadcast_callback = callback
+
+    def set_send_to_entity_callback(self, callback) -> None:
+        """注入發送訊息給特定實體的回呼函式（由 main.py 的 ConnectionManager 提供）"""
+        self._send_to_entity_callback = callback
+
+    async def _send_to_entity(self, entity_id: str, message: dict) -> None:
+        """內部方法，用於發送訊息給特定實體"""
+        if self._send_to_entity_callback:
+            await self._send_to_entity_callback(entity_id, message)
+        else:
+            logger.warning(f"send_to_entity_callback 尚未設定，無法發送訊息給 {entity_id}")
+
+    async def _simulation_loop(self) -> None:
+        """遊戲世界的核心模擬循環"""
+        repo = PlayerRepository() # Use PlayerRepository for player-specific operations
+        while True:
+            try:
+                # 每 30 秒固定結算 AP 等基礎數值
+                await repo.process_all_entities_tick()
+
+                # --- 危機事件推播邏輯 ---
+                # 遍歷目前在線的所有玩家
+                for entity_id in self._connections.keys():
+                    entity = await repo.get_entity(entity_id)
+                    if entity:
+                        # 30% 機率在這個 30 秒 tick 遇到突發危機
+                        if random.random() < 0.30:
+                            crisis = get_random_crisis()
+                            if crisis:
+                                # 標記該玩家正在面臨危機（可選擇性加入狀態機阻擋其他行動）
+                                await self._send_to_entity(entity_id, {
+                                    "type": "crisis",
+                                    "data": crisis.model_dump() # Assuming crisis is a Pydantic model
+                                })
+
+                await repo.sync_to_db()
+            except Exception as e:
+                logger.error(f"Simulation tick error: {e}", exc_info=True)
+
+            # 休眠 30 秒
+            await asyncio.sleep(30)
 
     async def trigger_news_flash(
         self,

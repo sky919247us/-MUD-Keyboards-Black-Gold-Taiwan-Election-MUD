@@ -442,6 +442,138 @@ body { -webkit-tap-highlight-color: transparent; }
   margin-right: 4px;
 }
 .news-time { font-size: 9px; color: var(--color-outline); font-family: monospace; }
+
+/* =========================================
+   6. 突發危機彈窗 (Crisis Modal)
+   ========================================= */
+.crisis-overlay {
+    background: rgba(40, 0, 0, 0.85); /* 深紅遮罩 */
+    z-index: 9999; /* 最高優先級，蓋住所有元素 */
+    backdrop-filter: blur(8px);
+    animation: fadeIn 0.3s ease;
+}
+
+.crisis-panel {
+    background: linear-gradient(135deg, #2a0808 0%, #1a0000 100%);
+    border: 2px solid #ff4444;
+    box-shadow: 0 0 30px rgba(255, 68, 68, 0.4), inset 0 0 20px rgba(255, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px;
+    padding: 24px;
+    border-radius: 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+/* 警報閃爍條紋裝飾 */
+.crisis-panel::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 6px;
+    background: repeating-linear-gradient(45deg, #ff4444, #ff4444 10px, #000 10px, #000 20px);
+}
+
+.crisis-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.crisis-icon {
+    font-size: 3rem;
+    animation: pulse 1s infinite alternate;
+}
+
+.crisis-header h2 {
+    color: #ff4444;
+    font-size: 1.8rem;
+    font-weight: 900;
+    text-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+    margin: 0;
+    letter-spacing: 2px;
+}
+
+.crisis-body p {
+    color: #ffd0d0;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    text-align: left;
+    padding: 10px;
+    background: rgba(255, 0, 0, 0.1);
+    border-radius: 8px;
+    border-left: 4px solid #ff4444;
+}
+
+.warning-banner {
+    background: #ff4444;
+    color: #fff;
+    font-weight: bold;
+    padding: 8px;
+    margin-bottom: 20px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.crisis-options {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.crisis-btn {
+    background: #4a0000;
+    color: #fff;
+    border: 1px solid #ff4444;
+    padding: 15px;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.crisis-btn:hover {
+    background: #ff4444;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 0, 0, 0.4);
+}
+
+.crisis-btn .btn-desc {
+    font-weight: bold;
+}
+
+.crisis-btn .btn-cost {
+    font-size: 0.85rem;
+    color: #ffaaaa;
+}
+
+.crisis-btn:hover .btn-cost {
+    color: #ffeaea;
+}
+
+/* 動畫效果 */
+@keyframes shake {
+  10%, 90% { transform: translate3d(-2px, 0, 0); }
+  20%, 80% { transform: translate3d(4px, 0, 0); }
+  30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+  40%, 60% { transform: translate3d(6px, 0, 0); }
+}
+
+@keyframes pulse {
+  from { transform: scale(1); opacity: 0.8; }
+  to { transform: scale(1.1); opacity: 1; text-shadow: 0 0 20px red; }
+}
+
 .news-title { font-weight: 700; font-size: 13px; margin-bottom: 2px; }
 .news-desc { font-size: 11px; color: var(--color-on-surface-dim); line-height: 1.4; }
 

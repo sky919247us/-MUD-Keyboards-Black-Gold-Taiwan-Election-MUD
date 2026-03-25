@@ -326,6 +326,13 @@ async function enterGame(eid) {
   ws.onmessage = (event) => {
     try {
       const data = JSON.parse(event.data);
+      
+      // 處理突發危機事件
+      if (data.type === "crisis") {
+        showCrisisModal(data.data);
+        return;
+      }
+      
       if (data.type === "broadcast") {
         if (data.msg_type === "news") {
           showNewsFlash(data.content);
@@ -456,6 +463,71 @@ function appendMsg(text, cls) {
   setTimeout(() => {
     output.scrollTop = output.scrollHeight;
   }, 50);
+}
+
+// ===== 危機事件處理 (Crisis System) =====
+
+/**
+ * 顯示突發危機強制互動彈窗
+ * @param {Object} crisisData - 後端傳來的危機資料結構
+ */
+function showCrisisModal(crisisData) {
+  const modal = document.getElementById("crisis-modal");
+  const title = document.getElementById("crisis-title");
+  const desc = document.getElementById("crisis-desc");
+  const optionsContainer = document.getElementById("crisis-options");
+
+  if (!modal || !title || !desc || !optionsContainer) return;
+
+  // 填寫內容
+  title.textContent = `[${crisisData.tier}級] ${crisisData.title}`;
+  desc.textContent = crisisData.description;
+  optionsContainer.innerHTML = "";
+
+  // 渲染所有選項
+  crisisData.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.className = "crisis-btn";
+    
+    // 組合花費字串
+    let costs = [];
+    if (opt.cost_ap > 0) costs.push(`${opt.cost_ap} AP`);
+    if (opt.cost_funds > 0) costs.push(`$${opt.cost_funds.toLocaleString()}`);
+    const costText = costs.length > 0 ? costs.join(" / ") : "無消耗";
+
+    btn.innerHTML = `
+      <span class="btn-desc">${opt.desc}</span>
+      <span class="btn-cost">代價：${costText}</span>
+    `;
+    
+    // 點擊後發送抉擇指令並關閉彈窗
+    btn.onclick = () => {
+      resolveCrisis(crisisData.id, opt.id);
+    };
+
+    optionsContainer.appendChild(btn);
+  });
+
+  // 顯示彈窗
+  modal.classList.remove("hidden");
+  
+  // 切換到選情頁籤準備看結果
+  switchTab("news");
+}
+
+/**
+ * 送出危機處理決策
+ */
+function resolveCrisis(crisisId, optId) {
+  if (!ws || ws.readyState !== WebSocket.OPEN) return;
+  // 送出指令
+  ws.send(`/resolve_crisis ${crisisId} ${optId}`);
+  
+  // 隱藏彈窗
+  const modal = document.getElementById("crisis-modal");
+  if (modal) {
+    modal.classList.add("hidden");
+  }
 }
 
 /** 顯示新聞跑馬燈 */

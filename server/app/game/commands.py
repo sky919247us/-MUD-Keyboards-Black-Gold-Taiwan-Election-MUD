@@ -10,12 +10,55 @@ from typing import Any
 from app.ai.settlement_engine import settleAction, generateCombatNarrative
 from app.engine.combat import attemptBossFlip, launchCyberAttack
 from app.engine.penalties import checkForceActionPenalty
+from app.engine.events import get_crisis_by_id
 from app.game.world import gameWorld
 from app.models.entity import PoliticalEntity
 from app.game.economy import market
 import random
 
 logger = logging.getLogger(__name__)
+
+async def _handleResolveCrisis(entity: PoliticalEntity, args: list[str]) -> str:
+    """處理玩家決策危機：/resolve_crisis <crisis_id> <option_id>"""
+    if len(args) < 2:
+        return "❌ 參數錯誤 (需提供危機 ID 與 選項 ID)"
+    
+    crisis_id = args[0]
+    opt_id = args[1]
+    
+    crisis = get_crisis_by_id(crisis_id)
+    if not crisis:
+        return f"❌ 找不到對應的危機 ({crisis_id})"
+        
+    option = next((o for o in crisis["options"] if o["id"] == opt_id), None)
+    if not option:
+        return f"❌ 找不到該決策選項 ({opt_id})"
+
+    # 檢查 AP 與資金
+    if entity.resources.staffAp < option["cost_ap"]:
+        return f"❌ 幕僚行動力不足 (需要 {option['cost_ap']} AP)"
+    if entity.resources.politicalFunds < option["cost_funds"]:
+        return f"❌ 政治獻金不足 (需要 {option['cost_funds']} 元)"
+
+    # 扣除成本
+    entity.resources.staffAp -= option["cost_ap"]
+    entity.resources.politicalFunds -= option["cost_funds"]
+        
+    # 套用影響
+    entity.applyAttributeChange(
+        favorability=option.get("effect_fav", 0),
+        aggro=option.get("effect_aggro", 0)
+    )
+    
+    await gameWorld.repo.save_entity(entity)
+    
+    # 組合回傳結果
+    lines = [
+        f"決策已執行：{option['desc']}",
+        f"消耗：AP -{option['cost_ap']}, 資金 -{option['cost_funds']}",
+        f"影響：好感度 {option.get('effect_fav', 0):+d}, 仇恨值 {option.get('effect_aggro', 0):+d}"
+    ]
+    return "\n".join(lines)
 
 
 async def handleCommand(entityId: str, rawInput: str) -> str:
@@ -55,6 +98,8 @@ async def handleCommand(entityId: str, rawInput: str) -> str:
             return await _handleLaunder(entity, args)
         case "/act":
             return await _handleAction(entity, args)
+        case "/resolve_crisis":
+            return await _handleResolveCrisis(entity, args)
         case "/help":
             return _formatHelp()
         case _:
