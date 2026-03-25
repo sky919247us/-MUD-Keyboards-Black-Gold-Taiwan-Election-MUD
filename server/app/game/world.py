@@ -18,8 +18,9 @@ from app.models.entity import (
 from app.repository.async_repo import AsyncRepository
 from app.data.npc_db import npc_db
 from app.game.economy import market
-from app.repositories.player_repo import PlayerRepository
 from app.engine.events import get_random_crisis
+import random
+import asyncio
 
 logger = logging.getLogger(__name__)
 
@@ -160,16 +161,23 @@ class GameWorld:
 
     async def _simulation_loop(self) -> None:
         """遊戲世界的核心模擬循環"""
-        repo = PlayerRepository() # Use PlayerRepository for player-specific operations
         while True:
             try:
+                # 取得所有實體
+                entities = await self.repo.get_all_entities()
+                
                 # 每 30 秒固定結算 AP 等基礎數值
-                await repo.process_all_entities_tick()
+                for entity in entities:
+                    # 恢復 AP
+                    entity.resources.staffAp = min(100, entity.resources.staffAp + 5)
+                
+                # 批次儲存
+                await self.repo.batch_save_entities(entities)
 
                 # --- 危機事件推播邏輯 ---
                 # 遍歷目前在線的所有玩家
                 for entity_id in self._connections.keys():
-                    entity = await repo.get_entity(entity_id)
+                    entity = await self.repo.get_entity_by_id(entity_id)
                     if entity:
                         # 30% 機率在這個 30 秒 tick 遇到突發危機
                         if random.random() < 0.30:
@@ -180,8 +188,6 @@ class GameWorld:
                                     "type": "crisis",
                                     "data": crisis.model_dump() # Assuming crisis is a Pydantic model
                                 })
-
-                await repo.sync_to_db()
             except Exception as e:
                 logger.error(f"Simulation tick error: {e}", exc_info=True)
 

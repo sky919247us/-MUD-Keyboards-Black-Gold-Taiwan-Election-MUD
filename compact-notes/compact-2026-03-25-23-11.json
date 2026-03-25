@@ -1,0 +1,111 @@
+{
+  "L0": "feat: 完成六都版圖/50+危機/組織養成系統並修復手機版 UI 與趨勢圖表 — 進行中（最後一輪修復待部署）",
+  "compact_version": "2.0",
+  "timestamp": "2026-03-25T23:11:41+08:00",
+  "project": {
+    "name": "鍵盤與黑金：台灣選戰 MUD",
+    "path": "d:\\《鍵盤與黑金：台灣選戰 MUD》 (Keyboards & Black Gold Taiwan Election MUD)",
+    "tech_stack": ["Python", "FastAPI", "JavaScript", "Chart.js", "Pydantic", "SQLite/aiosqlite", "LINE LIFF"],
+    "description": "台灣現代選戰政治模擬文字 MUD 遊戲，支援即時 WebSocket 互動與 LINE 登入"
+  },
+  "session_goal": "完成六都區域影響力系統(Phase 4)、同步官網至 v3.0.0(Phase 5)、部署至雲端並修復手機版 bug",
+  "completed": [
+    {
+      "task": "六都區域影響力資料模型與 API",
+      "files": ["server/app/models/entity.py", "server/app/main.py"],
+      "detail": "在 CoreAttributes 加入 regionalInfluence dict，並開放 /api/v1/world/status 端點回傳六都勢力統計"
+    },
+    {
+      "task": "行動指令地區關鍵字解析",
+      "files": ["server/app/game/commands.py"],
+      "detail": "在 _handleAction 中偵測台北/新北等六都關鍵詞，自動分配區域影響力"
+    },
+    {
+      "task": "前端六都戰情版圖視覺化",
+      "files": ["server/templates/index.html", "server/static/js/game.js", "server/static/css/game.css"],
+      "detail": "在排行頁籤加入六都卡片視圖與動態進度條"
+    },
+    {
+      "task": "50+ 危機事件庫擴充",
+      "files": ["server/app/data/crises.py"],
+      "detail": "從 5 種擴充至 50 種危機事件，分 S/A/B/C 四個等級"
+    },
+    {
+      "task": "組織養成系統 (招募/升級指令)",
+      "files": ["server/app/game/commands.py", "server/templates/index.html", "server/static/js/game.js"],
+      "detail": "新增 /recruit_boss、/recruit_army、/upgrade_boss、/upgrade_army 四支指令與前端互動 UI"
+    },
+    {
+      "task": "官網同步至 v3.0.0",
+      "files": ["server/templates/intro.html", "server/templates/index.html", "網頁設計內容/index.html"],
+      "detail": "版本號升至 v3.0.0，危機數量改為 50+，加入 AI 敘事與六都戰略特色描述"
+    },
+    {
+      "task": "雲端部署與隧道恢復",
+      "files": [],
+      "detail": "透過 SSH 執行 git pull + uv sync + nohup uvicorn 啟動伺服器，手動啟動 /home/sky919247us/cloudflared 隧道"
+    },
+    {
+      "task": "修復手機版組織分頁溢出與招募按鈕無反應",
+      "files": ["server/templates/index.html", "server/static/js/game.js"],
+      "detail": "頁籤列加入 overflow-x:auto 與 min-width:60px；sendCommand 新增 noSwitch 參數防止招募後跳轉頁籤"
+    }
+  ],
+  "in_progress": [
+    {
+      "task": "修復趨勢圖表空白與組織資產讀取失敗",
+      "status": "後端已加入 history.record() 到 tickJob；前端已加入空資料佔位提示。已推送待部署。",
+      "next_step": "使用者需在 SSH 執行 git pull，並殺掉舊 uvicorn 再重啟，才能载入新的 tickJob 邏輯",
+      "blockers": null
+    }
+  ],
+  "failed_approaches": [
+    {
+      "attempt": "直接使用 sudo systemctl restart mud-server 重啟伺服器",
+      "why_failed": "伺服器上並沒有註冊 systemd 服務",
+      "lesson": "此專案使用 nohup + cloudflared 二進位手動啟動，非 systemd 管理"
+    },
+    {
+      "attempt": "執行 cloudflared tunnel run 來恢復隧道",
+      "why_failed": "cloudflared 不在 PATH 中",
+      "lesson": "二進位檔位置在 /home/sky919247us/cloudflared，需用完整路徑執行"
+    },
+    {
+      "attempt": "只修改「網頁設計內容/index.html」以為一勞永逸",
+      "why_failed": "伺服器實際渲染的模板在 server/templates/ 目錄，外層只是設計稿",
+      "lesson": "修改前端必須同步修改 server/templates/ 下的實際範本檔案"
+    }
+  ],
+  "key_decisions": [
+    {
+      "decision": "趨勢圖表空白時顯示賽博龐克風格佔位提示，而非隱藏區域",
+      "reason": "避免空白畫布讓使用者以為功能壞了，展示資料收集中的狀態更友善",
+      "alternatives_rejected": ["完全隱藏圖表區域", "用假數據填充"]
+    },
+    {
+      "decision": "sendCommand 加入 noSwitch 參數而非拆分成兩個函式",
+      "reason": "最小改動原則，不影響既有行動按鈕的切換邏輯",
+      "alternatives_rejected": ["建立獨立的 sendAssetCommand 函式"]
+    }
+  ],
+  "user_preferences": [
+    "所有文件與 commit message 使用繁體中文",
+    "使用 uv 管理 Python 環境，嚴禁直接 pip",
+    "前端使用 Vanilla CSS + JS，非 React/Vue",
+    "偏好修復完成後一次推送，避免多次零散 commit",
+    "重視手機版 LINE LIFF 內的使用體驗"
+  ],
+  "key_files": {
+    "server/app/main.py": "FastAPI 主入口，包含所有 API 端點與 WebSocket 路由",
+    "server/app/game/commands.py": "MUD 指令解析與執行引擎（攻擊/拔椿/招募/升級等）",
+    "server/app/game/world.py": "GameWorld 單例管理器，含 HistoryManager 與危機推播邏輯",
+    "server/app/models/entity.py": "PoliticalEntity 核心資料模型（Pydantic v2）",
+    "server/app/data/crises.py": "50+ 分級政治危機事件庫",
+    "server/app/data/narratives.py": "100+ AI 敘事語錄庫（Mock 模式用）",
+    "server/templates/index.html": "遊戲 PWA 主頁面（LINE LIFF 入口）",
+    "server/templates/intro.html": "官方介紹網站 Landing Page",
+    "server/static/js/game.js": "前端主程式（WebSocket、頁籤、圖表、組織）",
+    "server/static/css/game.css": "賽博龐克設計系統 CSS"
+  },
+  "handover_context": "台灣選戰 MUD 遊戲已完成 v3.0.0 大版本更新（六都版圖/50+危機/組織養成/AI敘事），部署在 mud.guanda.dev（Cloudflare Tunnel → uvicorn:8000）。最新一輪修正修復了趨勢圖表空白（tickJob 未記錄歷史快照）與手機版 UI 問題，已推送但伺服器需要 git pull 並重啟 uvicorn。建議第一步：在 SSH 上執行 kill $(pgrep -f uvicorn) && cd ~/tw-mud/server && git pull && nohup uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 > server.log 2>&1 &。"
+}
