@@ -384,6 +384,10 @@ function switchTab(tab) {
   if (tab === "market")  updateEconomyData();
   if (tab === "profile") updateProfileData();
   if (tab === "assets")  updateAssetsData();
+  // 切回選情時自動捲到最新訊息
+  if (tab === "news" && output) {
+    setTimeout(() => { output.scrollTop = output.scrollHeight; }, 50);
+  }
 }
 
 // ===== 行動按鈕列 =====
