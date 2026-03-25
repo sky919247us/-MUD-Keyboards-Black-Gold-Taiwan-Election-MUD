@@ -207,9 +207,9 @@ async def _handleAction(entity: PoliticalEntity, args: list[str]) -> str:
     actionDesc = " ".join(args)
 
     # 檢查強行行動風險
-    isDisaster, disasterMsg = checkForceActionPenalty(entity)
-    if isDisaster and disasterMsg:
-        return disasterMsg
+    isDisaster, forceActionWarning = checkForceActionPenalty(entity)
+    if isDisaster and forceActionWarning:
+        return forceActionWarning
 
     # 呼叫 AI 結算引擎（注入當前現實 API 快照）
     realityApi: dict = {}
@@ -267,6 +267,10 @@ async def _handleAction(entity: PoliticalEntity, args: list[str]) -> str:
     lines.append(f"[結算] 好感度 {changes.get('favorability', 0):+d}，"
                  f"仇恨值 {changes.get('aggro', 0):+d}，"
                  f"知名度 {changes.get('fame', 0):+d}")
+                 
+    if not isDisaster and forceActionWarning:
+        lines.append("")
+        lines.append(forceActionWarning)
 
     return "\n".join(lines)
 

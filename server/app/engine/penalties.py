@@ -103,6 +103,6 @@ def checkForceActionPenalty(entity: PoliticalEntity) -> tuple[bool, str | None]:
         desc = random.choice(disasters)
         # 套用災難效果
         entity.applyAttributeChange(favorability=-800, fame=-200)
-        return True, f"【公關災難】{desc}（好感度 -800，知名度 -200）"
+        return True, f"🚨【過勞警報】因幕僚行動力 (AP) 為 0 仍強行運作！觸發嚴重公關災難：{desc}（好感度 -800，知名度 -200）"
 
-    return False, None
+    return False, "⚠️【極限壓榨】您的幕僚在 AP 為 0 的狀態下奇蹟似地撐過了這次爆肝任務，沒有引發公關災難！但請注意員工身心狀態。"
