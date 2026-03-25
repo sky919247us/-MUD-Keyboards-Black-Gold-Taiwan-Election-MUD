@@ -548,13 +548,29 @@ function showNewsFlash(text) {
 
 /** 更新選情趨勢圖（Chart.js） */
 async function updateTrendingChart(eid) {
+  const chartContainer = document.getElementById("chart-container");
   try {
     const res = await fetch(`/api/v1/entities/${eid}/history`);
-    if (!res.ok) return;
+    if (!res.ok) {
+      showChartPlaceholder(chartContainer);
+      return;
+    }
     const data = await res.json();
 
+    // 資料不足時顯示佔位提示
+    if (!data.labels || data.labels.length < 2) {
+      showChartPlaceholder(chartContainer);
+      return;
+    }
+
+    // 有資料：移除佔位提示，顯示畫布
+    const placeholder = document.getElementById("chart-placeholder");
+    if (placeholder) placeholder.remove();
+    const canvas = document.getElementById("trendingChart");
+    if (canvas) canvas.style.display = "block";
+
     if (!trendingChart) {
-      const ctx = document.getElementById("trendingChart").getContext("2d");
+      const ctx = canvas.getContext("2d");
       trendingChart = new Chart(ctx, {
         type: "line",
         data: {
@@ -600,7 +616,24 @@ async function updateTrendingChart(eid) {
     }
   } catch (e) {
     console.error("Chart update error:", e);
+    showChartPlaceholder(chartContainer);
   }
+}
+
+/** 圖表資料不足時顯示佔位提示 */
+function showChartPlaceholder(container) {
+  if (!container || document.getElementById("chart-placeholder")) return;
+  const canvas = document.getElementById("trendingChart");
+  if (canvas) canvas.style.display = "none";
+  const ph = document.createElement("div");
+  ph.id = "chart-placeholder";
+  ph.style.cssText = "display:flex;flex-direction:column;align-items:center;justify-content:center;height:120px;background:var(--color-surface-container);border:1px dashed var(--color-outline-variant);margin:0 12px;";
+  ph.innerHTML = `
+    <span class="material-symbols-outlined" style="font-size:28px;color:var(--color-outline);margin-bottom:6px">monitoring</span>
+    <div style="font-size:11px;color:var(--color-on-surface-dim);font-family:var(--font-headline);font-weight:600">選情趨勢數據收集中...</div>
+    <div style="font-size:9px;color:var(--color-outline);margin-top:2px">系統每 Tick 自動記錄，數據累積後將顯示走勢圖</div>
+  `;
+  container.appendChild(ph);
 }
 
 // ===== 排行榜資料 =====

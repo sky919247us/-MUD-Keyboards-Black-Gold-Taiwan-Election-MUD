@@ -95,6 +95,16 @@ async def tickJob() -> None:
     gameWorld.advanceTick()
     entities = await gameWorld.repo.get_all_entities()
     
+    # 紀錄每個實體的歷史快照（供趨勢圖表使用）
+    for ent in entities:
+        gameWorld.history.record(
+            entity_id=ent.entityId,
+            tick=gameWorld.tickCount,
+            fame=ent.coreAttributes.fame,
+            favorability=ent.coreAttributes.favorability,
+            aggro=ent.coreAttributes.aggro,
+        )
+
     # 使用包含新聞的非同步 Tick
     events = await executeTickAsync(entities)
 
