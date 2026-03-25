@@ -419,14 +419,17 @@ function doAction(cmd, label) {
 /**
  * 透過 WebSocket 發送指令
  * @param {string} cmd - 指令字串
+ * @param {boolean} noSwitch - 若為 true，不切換頁籤
  */
-function sendCommand(cmd) {
+function sendCommand(cmd, noSwitch) {
   if (!ws || ws.readyState !== WebSocket.OPEN) {
     appendMsg("⚠ 連線中斷，請重新整理頁面。", "error");
     return;
   }
   ws.send(cmd);
-  switchTab("news"); // 切換至選情 tab 以觀看回傳結果
+  if (!noSwitch) {
+    switchTab("news"); // 切換至選情 tab 以觀看回傳結果
+  }
 }
 
 // ===== 訊息顯示 =====
@@ -778,19 +781,23 @@ async function updateProfileData() {
 /** 招募組織資產 */
 function recruitAsset(type) {
     if (type === "boss") {
-        sendCommand("/recruit_boss");
+        sendCommand("/recruit_boss", true);
     } else if (type === "army") {
-        sendCommand("/recruit_army");
+        sendCommand("/recruit_army", true);
     }
+    // 延遲刷新組織頁面，讓後端有時間處理指令
+    setTimeout(() => updateAssetsData(), 1500);
 }
 
 /** 升級組織資產 */
 function upgradeAsset(type, id) {
     if (type === "boss") {
-        sendCommand(`/upgrade_boss ${id}`);
+        sendCommand(`/upgrade_boss ${id}`, true);
     } else if (type === "army") {
-        sendCommand(`/upgrade_army ${id}`);
+        sendCommand(`/upgrade_army ${id}`, true);
     }
+    // 延遲刷新組織頁面，讓後端有時間處理指令
+    setTimeout(() => updateAssetsData(), 1500);
 }
 
 /** 更新組織資產頁面 */

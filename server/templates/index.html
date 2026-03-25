@@ -185,20 +185,20 @@
     </div>
 
     <!-- 頁籤導覽 -->
-    <div style="display:flex;border-bottom:1px solid var(--color-outline-variant);flex-shrink:0">
-      <button class="nav-tab active" data-tab="news" onclick="switchTab('news')">
+    <div style="display:flex;border-bottom:1px solid var(--color-outline-variant);flex-shrink:0;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none">
+      <button class="nav-tab active" data-tab="news" onclick="switchTab('news')" style="min-width:60px">
         <span class="material-symbols-outlined" style="font-size:16px">newspaper</span> 選情
       </button>
-      <button class="nav-tab" data-tab="market" onclick="switchTab('market')">
+      <button class="nav-tab" data-tab="market" onclick="switchTab('market')" style="min-width:60px">
         <span class="material-symbols-outlined" style="font-size:16px">trending_up</span> 市場
       </button>
-      <button class="nav-tab" data-tab="rank" onclick="switchTab('rank')">
+      <button class="nav-tab" data-tab="rank" onclick="switchTab('rank')" style="min-width:60px">
         <span class="material-symbols-outlined" style="font-size:16px">leaderboard</span> 排行
       </button>
-      <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')">
+      <button class="nav-tab" data-tab="profile" onclick="switchTab('profile')" style="min-width:60px">
         <span class="material-symbols-outlined" style="font-size:16px">person_pin</span> 幕僚
       </button>
-      <button class="nav-tab" data-tab="assets" onclick="switchTab('assets')">
+      <button class="nav-tab" data-tab="assets" onclick="switchTab('assets')" style="min-width:60px">
         <span class="material-symbols-outlined" style="font-size:16px">domain</span> 組織
       </button>
     </div>
@@ -350,7 +350,7 @@
 </style>
 
 <!-- 主程式 -->
-<script src="/static/js/game.js?v=7"></script>
+<script src="/static/js/game.js?v=8"></script>
 
 </body>
 </html>
